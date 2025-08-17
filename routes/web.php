@@ -4,7 +4,23 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+
+use App\Http\Controllers\Fontend\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Mail\ConfirmEmail;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
+Route::get('home', [HomeController::class, 'index'])->name('home.index');
+Route::get('faq', [HomeController::class, 'faq'])->name('home.faq');
+Route::get('/contact', [HomeController::class, 'showForm'])->name('home.contact');
+Route::post('/contact/send', [HomeController::class, 'send'])->name('contact.send');
+Route::get('terms_and_conditions', [HomeController::class, 'terms_and_conditions'])->name('home.terms_and_conditions');
+Route::get('return_and_warranty_policy', [HomeController::class, 'return_and_warranty_policy'])->name('home.return_and_warranty_policy');
+Route::get('about_us', [HomeController::class, 'about_us'])->name('home.about_us');
+Route::get('security_center', [HomeController::class, 'security_center'])->name('home.security_center');
+
 
 // WEB ROUTES
 Route::get('/', [AuthController::class, 'index'])->name('home');
