@@ -4,12 +4,12 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+
 use App\Http\Controllers\Fontend\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Mail\ConfirmEmail;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
-
 
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
@@ -22,7 +22,9 @@ Route::get('about_us', [HomeController::class, 'about_us'])->name('home.about_us
 Route::get('security_center', [HomeController::class, 'security_center'])->name('home.security_center');
 
 
-//AUTH
+// WEB ROUTES
+Route::get('/', [AuthController::class, 'index'])->name('home');
+// AUTH
 Route::get('login', [LoginController::class, 'index'])->name('auth.login');
 Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
 Route::get('register', [RegisterController::class, 'index'])->name('auth.register');
