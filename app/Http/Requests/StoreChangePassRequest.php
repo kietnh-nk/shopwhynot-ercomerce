@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class StoreChangePassRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,19 +22,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:8',
+            'email' => 'required|string|email|max:255',
         ];
     }
+    // custom thông báo lỗi 
     public function messages(): array
     {
         return [
+            //
             'email.required' => 'Bạn chưa nhập email!',
-            'email.email' => 'Email không đúng định dạng. VD: info@gmail.com',
-            'email.string' => 'Email Phải là chuỗi ký tự!',
-            'password.required' => 'Bạn chưa nhập mật khẩu!',
-            'password.string' => 'Mật khẩu phải là chuỗi ký tự!',
-            'password.min' => 'Mật khẩu phải lớn hơn 8 ký tự!',
+            'email.email' => 'Email chưa đúng định dạng. VD: info@gmail.com',
+            'email.string' => 'Email phải là các ký tự.',
+            'email.max' => 'Email quá dài. Tối đa là 255 ký tự!',
         ];
     }
 }

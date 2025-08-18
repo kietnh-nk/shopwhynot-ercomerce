@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthRequest extends FormRequest
+class StoreResetPassRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,19 +22,20 @@ class AuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string|email',
             'password' => 'required|string|min:8',
+            'password_confirmation' => 'required|string|same:password', // re_password phải giống password trên 
         ];
     }
+    // custom thông báo lỗi 
     public function messages(): array
     {
         return [
-            'email.required' => 'Bạn chưa nhập email!',
-            'email.email' => 'Email không đúng định dạng. VD: info@gmail.com',
-            'email.string' => 'Email Phải là chuỗi ký tự!',
             'password.required' => 'Bạn chưa nhập mật khẩu!',
-            'password.string' => 'Mật khẩu phải là chuỗi ký tự!',
-            'password.min' => 'Mật khẩu phải lớn hơn 8 ký tự!',
+            'password.min' => 'Bạn nhập không đủ ký tự cho mật khẩu.',
+            'password.string' => 'Mật khẩu phải là chuỗi.',
+            'password_confirmation.string' => 'Mật khẩu xác nhận phải là chuỗi.',
+            'password_confirmation.required' => 'Vui lòng Xác minh mật khẩu.',
+            'password_confirmation.same' => 'Mật khẩu không khớp.',
         ];
     }
 }
