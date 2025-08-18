@@ -9,6 +9,10 @@ use App\Http\Controllers\Fontend\ShopController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\UserCatalogueController;
+use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\PostController;
+use App\Http\Controllers\Backend\RevenueController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -60,5 +64,39 @@ Route::get('security_center', [HomeController::class, 'security_center'])->name(
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
+    // usercatalogue
+    Route::group(['prefix' => 'user/catalogue'], function () {
+        Route::get('index', [UserCatalogueController::class, 'index'])->name('user.catalogue.index');
+        Route::get('create', [UserCatalogueController::class, 'create'])->name('user.catalogue.create');
+        Route::post('store', [UserCatalogueController::class, 'store'])->name('user.catalogue.store');
+        Route::get('update/{slug}', [UserCatalogueController::class, 'update'])->name('user.catalogue.update');
+        Route::post('edit/{slug}', [UserCatalogueController::class, 'edit'])->name('user.catalogue.edit');
+        Route::get('delete/{id}', [UserCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('user.catalogue.delete');
+        Route::delete('destroy/{id}', [UserCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.catalogue.destroy');
+    });
+    // users 
+    Route::group(['prefix' => 'user/'], function () {
+        Route::get('index', [UserController::class, 'index'])->name('user.index');
+        Route::get('create', [UserController::class, 'create'])->name('user.create');
+        Route::post('store', [UserController::class, 'store'])->name('user.store');
+        Route::get('update/{id}', [UserController::class, 'update'])->where(['id' => '[0-9]+'])->name('user.update');
+        Route::post('edit/{id}', [UserController::class, 'edit'])->where(['id' => '[0-9]+'])->name('user.edit');
+        Route::get('detail/{id}', [UserController::class, 'detail'])->where(['id' => '[0-9]+'])->name('user.detail');
+        // Route::get('delete/{id}', [UserController::class, 'delete'])->where(['id' => '[0-9]+'])->name('user.delete');
+        // Route::delete('destroy/{id}', [UserController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.destroy');
+    });
 
+    //posts
+    Route::group(['prefix' => 'post'], function () {
+        Route::get('index', [PostController::class, 'index'])->name('post.index');
+        Route::get('create', [PostController::class, 'create'])->name('post.create');
+        Route::post('store', [PostController::class, 'store'])->name('post.store');
+        Route::get('update/{slug}', [PostController::class, 'update'])->name('post.update');
+        Route::post('edit/{slug}', [PostController::class, 'edit'])->name('post.edit');
+        Route::get('delete/{id}', [PostController::class, 'delete'])->where(['id' => '[0-9]+'])->name('post.delete');
+        Route::delete('destroy/{id}', [PostController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('post.destroy');
+    });
+    //Doanh thu
+    Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
+    Route::post('/admin/thong-ke-data', [RevenueController::class, 'Thongke']);
 });
