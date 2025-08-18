@@ -30,7 +30,7 @@ class ProductVariant extends Model
         'publish',
     ];
 
-    // khai báo quan hệ với bảng product 
+    // khai báo quan hệ với bảng product
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
@@ -40,9 +40,9 @@ class ProductVariant extends Model
         return $this->belongsToMany(Attribute::class, 'product_variant_attribute', 'product_variant_id', 'attribute_id');
     }
 
-    // public function wishlists(): HasMany
-    // {
-    //     return $this->hasMany(WishList::class, 'product_vairant_id', 'id');
-    // }
-    
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(WishList::class, 'product_vairant_id', 'id');
+    }
+
 }

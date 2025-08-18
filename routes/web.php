@@ -8,6 +8,7 @@ use App\Http\Controllers\Fontend\HomeController;
 use App\Http\Controllers\Fontend\ShopController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
+use App\Http\Controllers\Backend\DashboardController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -53,3 +54,11 @@ Route::get('terms_and_conditions', [HomeController::class, 'terms_and_conditions
 Route::get('return_and_warranty_policy', [HomeController::class, 'return_and_warranty_policy'])->name('home.return_and_warranty_policy');
 Route::get('about_us', [HomeController::class, 'about_us'])->name('home.about_us');
 Route::get('security_center', [HomeController::class, 'security_center'])->name('home.security_center');
+
+
+//BACKEND
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+
+});
