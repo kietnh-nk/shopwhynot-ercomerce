@@ -53,5 +53,8 @@ class Product extends Model
         return $this->belongsTo(Brand::class, 'brand_id');
     }
     //khia báo quan hệ với bảng product variant (1pro - nhiều phiên bản)
-    
+    public function productVariant(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class, 'product_id', 'id');
+    }
 }
