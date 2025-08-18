@@ -53,3 +53,11 @@ Route::get('terms_and_conditions', [HomeController::class, 'terms_and_conditions
 Route::get('return_and_warranty_policy', [HomeController::class, 'return_and_warranty_policy'])->name('home.return_and_warranty_policy');
 Route::get('about_us', [HomeController::class, 'about_us'])->name('home.about_us');
 Route::get('security_center', [HomeController::class, 'security_center'])->name('home.security_center');
+
+
+//BACKEND
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+
+});
