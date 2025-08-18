@@ -29,6 +29,12 @@ Route::get('/password/resend-otp', [ForgotPasswordController::class, 'resendOtp'
 Route::get('/password/reset', [ForgotPasswordController::class, 'resetForm'])->name('password.reset');
 Route::post('/password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
 
+Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+//Page 404
+Route::fallback(function () {
+    return view('fontend.error.404');
+});
 //FRONEND
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
