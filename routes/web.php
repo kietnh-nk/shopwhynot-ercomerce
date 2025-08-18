@@ -8,6 +8,7 @@ use App\Http\Controllers\Fontend\HomeController;
 use App\Http\Controllers\Fontend\ShopController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
+use App\Http\Controllers\Backend\DashboardController;
 
 
 use Illuminate\Support\Facades\Route;
