@@ -2,31 +2,46 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\QueryScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, QueryScopes;
 
     /**
-     * The attributes that are mass assignable.
+     * Các thuộc tính có thể điền hàng loạt.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'birthday',
+        'phone',
+        'province_id',
+        'district_id',
+        'ward_id',
+        'address',
+        'phone',
+        'phone',
+        'description',
+        'image',
+        'google_id',
+        'facebook_id',
+        'user_catalogue_id',
+        'email_verification_token',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Các thuộc tính bị ẩn khi hiển thị.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -34,15 +49,15 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Các thuộc tính cần được ép kiểu.
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
+    // Quan hệ với bảng user_catalogues
+    
 }
