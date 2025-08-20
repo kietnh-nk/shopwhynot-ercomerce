@@ -17,6 +17,7 @@ use App\Http\Controllers\Backend\RevenueController;
 
 use Illuminate\Support\Facades\Route;
 
+
 // WEB ROUTES
 Route::get('/', [AuthController::class, 'index'])->name('home');
 // AUTH
@@ -100,3 +101,4 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
     Route::post('/admin/thong-ke-data', [RevenueController::class, 'Thongke']);
 });
+
