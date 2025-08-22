@@ -13,11 +13,20 @@ use App\Http\Controllers\Backend\UserCatalogueController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\RevenueController;
+use App\Http\Controllers\Backend\AttributeCatalogueController;
+use App\Http\Controllers\Backend\AttributeController;
+use App\Http\Controllers\Ajax\AttributeController as AjaxAttributeController;
 
 
 use Illuminate\Support\Facades\Route;
 
 
+// AJAX
+//SEARCH SUGGESTION
+Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'])->name('ajax.search.suggestions');
+// ATTRIBUTE
+Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
+Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
 // WEB ROUTES
 Route::get('/', [AuthController::class, 'index'])->name('home');
 // AUTH
@@ -75,7 +84,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [UserCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('user.catalogue.delete');
         Route::delete('destroy/{id}', [UserCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.catalogue.destroy');
     });
-    // users 
+    // users
     Route::group(['prefix' => 'user/'], function () {
         Route::get('index', [UserController::class, 'index'])->name('user.index');
         Route::get('create', [UserController::class, 'create'])->name('user.create');
@@ -96,6 +105,26 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('edit/{slug}', [PostController::class, 'edit'])->name('post.edit');
         Route::get('delete/{id}', [PostController::class, 'delete'])->where(['id' => '[0-9]+'])->name('post.delete');
         Route::delete('destroy/{id}', [PostController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('post.destroy');
+    });
+        // attribute catalogue
+    Route::group(['prefix' => 'attribute/catalogue'], function () {
+        Route::get('index', [AttributeCatalogueController::class, 'index'])->name('attribute.catalogue.index');
+        Route::get('create', [AttributeCatalogueController::class, 'create'])->name('attribute.catalogue.create');
+        Route::post('store', [AttributeCatalogueController::class, 'store'])->name('attribute.catalogue.store');
+        Route::get('update/{slug}', [AttributeCatalogueController::class, 'update'])->name('attribute.catalogue.update');
+        Route::post('edit/{slug}', [AttributeCatalogueController::class, 'edit'])->name('attribute.catalogue.edit');
+        Route::get('delete/{id}', [AttributeCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('attribute.catalogue.delete');
+        Route::delete('destroy/{id}', [AttributeCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('attribute.catalogue.destroy');
+    });
+        // attribute
+    Route::group(['prefix' => 'attribute'], function () {
+        Route::get('index', [AttributeController::class, 'index'])->name('attribute.index');
+        Route::get('create', [AttributeController::class, 'create'])->name('attribute.create');
+        Route::post('store', [AttributeController::class, 'store'])->name('attribute.store');
+        Route::get('update/{slug}', [AttributeController::class, 'update'])->name('attribute.update');
+        Route::post('edit/{slug}', [AttributeController::class, 'edit'])->name('attribute.edit');
+        Route::get('delete/{id}', [AttributeController::class, 'delete'])->where(['id' => '[0-9]+'])->name('attribute.delete');
+        Route::delete('destroy/{id}', [AttributeController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('attribute.destroy');
     });
     //Doanh thu
     Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
