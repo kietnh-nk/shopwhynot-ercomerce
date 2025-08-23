@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\RevenueController;
 use App\Http\Controllers\Backend\AttributeCatalogueController;
 use App\Http\Controllers\Backend\AttributeController;
 use App\Http\Controllers\Ajax\AttributeController as AjaxAttributeController;
+use App\Http\Controllers\Backend\ProductCatalogueController;
 
 
 use Illuminate\Support\Facades\Route;
