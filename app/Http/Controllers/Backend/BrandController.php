@@ -41,7 +41,7 @@ class BrandController extends Controller
     }
     public function store(StoreBrandRequest $request)
     {
-        // gọi tới service với phương thức create
+        // gọi tới service với phương thức create 
         $result = $this->brandService->create($request);
         if ($result) {
             flash()->success('Thêm mới thành công');
@@ -73,34 +73,19 @@ class BrandController extends Controller
     }
     public function delete($id = 0)
     {
-        try {
-            $brand = $this->brandRepository->findById($id);
-            if (!$brand) {
-                flash()->error('Không tìm thấy thương hiệu!');
-                return redirect()->route('brand.index');
-            }
-            $template = 'backend.brand.delete';
-            return view('backend.dashboard.layout', compact(
-                'template',
-                'brand',
-            ));
-        } catch (\Exception $e) {
-            flash()->error('Không tìm thấy thương hiệu! Lỗi: ' . $e->getMessage());
-            return redirect()->route('brand.index');
-        }
+        $brand = $this->brandRepository->findById($id);
+        $template = 'backend.brand.delete';
+        return view('backend.dashboard.layout', compact(
+            'template',
+            'brand',
+        ));
     }
     public function destroy($id = 0)
     {
         if ($_POST['submit'] == 'cancel') {
-            flash()->warning('Thương hiệu chưa được xóa!');
+            flash()->warning('Nhóm thương hiệu chưa được xóa!');
             return redirect()->route('brand.index');
         } else {
-            $brand = $this->brandRepository->findById($id);
-            //kiểm tra xem bản ghi đó có các bản ghi liên quan trong bảng products kh
-            if ($brand->products()->exists()) {
-                flash()->warning('Thương hiệu có sản phẩm liên quan không thể xóa!');
-                return redirect()->back();
-            }
             $result = $this->brandService->destroy($id);
             if ($result) {
                 flash()->success('Thương hiệu đã được xóa thành công!');
@@ -120,7 +105,7 @@ class BrandController extends Controller
         // Kiểm tra nếu có ID, và tách chuỗi thành mảng
         if ($listId) {
             $arrayId = explode(',', $listId);
-            dd($arrayId);
+            //dd($arrayId);
             $this->brandService->destroyBulk($arrayId);
             flash()->success('Xóa thành công các bản ghi.');
         } else {
