@@ -4,38 +4,39 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Fontend\HomeController;
-use App\Http\Controllers\Fontend\ShopController;
+use App\Http\Controllers\Backend\AttributeCatalogueController;
+use App\Http\Controllers\Backend\AttributeController;
 use App\Http\Controllers\Ajax\AttributeController as AjaxAttributeController;
 use App\Http\Controllers\Ajax\ProductController as AjaxProductController;
+use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Ajax\CartController as AjaxCartController;
 use App\Http\Controllers\Ajax\WishlistController as AjaxWishlistController;
 use App\Http\Controllers\Ajax\OrderController as AjaxOrderController;
-use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
-use App\Http\Controllers\Fontend\ProductController as FontendProductController;
-use App\Http\Controllers\Fontend\PostController as FontendPostController;
-use App\Http\Controllers\Backend\ProductController;
-use App\Http\Controllers\Backend\DashboardController;
-use App\Http\Controllers\Backend\UserCatalogueController;
-use App\Http\Controllers\Backend\UserController;
-use App\Http\Controllers\Backend\PostController;
-use App\Http\Controllers\Backend\RevenueController;
-use App\Http\Controllers\Backend\AttributeCatalogueController;
-use App\Http\Controllers\Backend\AttributeController;
 use App\Http\Controllers\Backend\BrandController;
+use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\PostCatalogueController;
+use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\ProductCatalogueController;
+use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Fontend\FPromotionController;
 use App\Http\Controllers\Backend\BannerController;
 use App\Http\Controllers\Fontend\UserController as FontendUserController;
+use App\Http\Controllers\Fontend\ProductController as FontendProductController;
+use App\Http\Controllers\Fontend\HomeController;
 use App\Http\Controllers\Fontend\OrderController as FontendOrderController;
 use App\Http\Controllers\Backend\OrderController;
+use App\Http\Controllers\Fontend\PostController as FontendPostController;
+use App\Http\Controllers\Fontend\ShopController;
 use App\Http\Controllers\Backend\PromotionController;
+use App\Http\Controllers\Backend\UserCatalogueController;
+use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\Fontend\MomoController;
 use App\Http\Controllers\Fontend\VnpayController;
 use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\Backend\RevenueController;
 use Illuminate\Support\Facades\Route;
+
 
 
 // AJAX
@@ -45,8 +46,7 @@ Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'
 Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
 Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
-// WEB ROUTES
-Route::get('/', [AuthController::class, 'index'])->name('home');
+
 // AUTH
 Route::get('login', [LoginController::class, 'index'])->name('auth.login');
 Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
@@ -125,7 +125,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [UserCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('user.catalogue.delete');
         Route::delete('destroy/{id}', [UserCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.catalogue.destroy');
     });
-
     // users
     Route::group(['prefix' => 'user/'], function () {
         Route::get('index', [UserController::class, 'index'])->name('user.index');
@@ -234,9 +233,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('index', [OrderController::class, 'index'])->name('order.index');
         Route::get('detail/{id}', [OrderController::class, 'detail'])->where(['id' => '[0-9]+'])->name('order.detail');
         Route::post('process_cancele/{id}', [OrderController::class, 'process_cancele'])->where(['id' => '[0-9]+'])->name('order.process_cancele');
-    });
-
-    //Banner
+    //Banner 
     Route::group(['prefix' => 'banner'], function () {
         Route::get('index', [BannerController::class, 'index'])->name('banner.index');
         Route::get('create', [BannerController::class, 'create'])->name('banner.create');
@@ -246,8 +243,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [BannerController::class, 'delete'])->where(['id' => '[0-9]+'])->name('banner.delete');
         Route::delete('destroy/{id}', [BannerController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('banner.destroy');
     });
-
-    //Doanh thu
+         //Doanh thu
     Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
     Route::post('/admin/thong-ke-data', [RevenueController::class, 'Thongke']);
 
@@ -267,6 +263,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/producreview-data', [ProductReviewController::class, 'getdata']);
     Route::post('/producreview-update-admin', [ProductReviewController::class, 'updateadmin']);
     Route::post('/producreview-delete-admin', [ProductReviewController::class, 'deleteadmin']);
+    });
 });
 
 
