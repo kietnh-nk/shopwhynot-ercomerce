@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Ajax;
 
 use App\Models\Cart;
@@ -72,26 +73,14 @@ class CartController extends FontendController
                 'redirect' => route('auth.login'),
             ], 401);
         }
-
         try {
-            $cartItem = $this->cartService->create($request); 
+            $carts = $this->cartService->create($request);
             $cart = $this->cartService->all();
             flash()->success('Sản phẩm đã được thêm vào giỏ hàng.');
             return response()->json([
                 'code' => 10,
                 'message' => 'Sản phẩm đã được thêm vào giỏ hàng.',
                 'success' => 'Sản phẩm đã được thêm vào giỏ hàng.',
-                'cartItem' => $cartItem,
-                'carts' => $cart->cartItems,
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('CartController::addToCart error: ' . $e->getMessage());
-            return response()->json([
-                'code' => 11,
-                'message' => $e->getMessage() ?: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.',
-            ], 400);
-        }
-    }
                 'carts' => $carts,
                 'cartItem' => $cart->cartItems,
             ]);
@@ -102,6 +91,7 @@ class CartController extends FontendController
             ], 500);
         }
     }
+
     public function updateCart(Request $request)
     {
         if (!Auth::check()) {
@@ -234,6 +224,7 @@ class CartController extends FontendController
             'data' => $arrayIdChecked
         ]);
     }
+
     public function getOrderByCartId(Request $request)
     {
         $arrayId = session('array_id', []);
@@ -250,6 +241,10 @@ class CartController extends FontendController
             'array_id' => $arrayId,
         ]);
     }
+
+
+
+
 
     public function applyPromotion(Request $request)
     {
@@ -299,6 +294,7 @@ class CartController extends FontendController
 
         $totalDiscount = session()->get('total_discount', 0);
         $canApplyPromotion = false;
+
         // Prevent applying same type if already applied
         if (in_array($userPromotion->apply_for, array_column($promotions, 'apply_for'))) {
             flash()->error('Không thể áp dụng nhiều mã giảm giá cùng loại.');
@@ -338,14 +334,9 @@ class CartController extends FontendController
             // FIX: Calculate current cart total after existing discounts
             $currentCartTotal = $cartTotal - $totalDiscount;
 
-
             // FIX: Ensure discount doesn't make total negative
             $actualDiscount = min($currentCartTotal, $userPromotion->discount);
 
-            
-            // FIX: Ensure discount doesn't make total negative
-            $actualDiscount = min($currentCartTotal, $userPromotion->discount);
-            
             // Only apply if there's actually something to discount
             if ($actualDiscount > 0) {
                 session()->put('discount', $actualDiscount);
@@ -369,11 +360,6 @@ class CartController extends FontendController
             // FIX: Store actual applied discount amount, not the original discount value
             $appliedDiscount = ($userPromotion->apply_for === 'all') ?
                 $actualDiscount : $userPromotion->discount;
-
-
-            $appliedDiscount = ($userPromotion->apply_for === 'all') ? 
-                $actualDiscount : $userPromotion->discount;
-                
 
             $promotions[] = [
                 'code' => $userPromotion->code,
@@ -449,7 +435,4 @@ class CartController extends FontendController
         flash()->error('Không tìm thấy mã giảm giá.');
         return redirect()->back();
     }
-
-}
-
 }
