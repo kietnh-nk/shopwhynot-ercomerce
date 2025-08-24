@@ -14,7 +14,9 @@ use App\Http\Controllers\Ajax\OrderController as AjaxOrderController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
 use App\Http\Controllers\Fontend\PostController as FontendPostController;
-use App\Http\Controllers\Ajax\ProductController as AjaxProductController;
+use App\Http\Controllers\Fontend\OrderController as FontendOrderController;
+use App\Http\Controllers\Fontend\UserController as FontendUserController;
+
 use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserCatalogueController;
@@ -23,7 +25,6 @@ use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\RevenueController;
 use App\Http\Controllers\Backend\AttributeCatalogueController;
 use App\Http\Controllers\Backend\AttributeController;
-use App\Http\Controllers\Ajax\AttributeController as AjaxAttributeController;
 use App\Http\Controllers\Fontend\FPromotionController;
 use App\Http\Controllers\Backend\ProductCatalogueController;
 use App\Http\Controllers\Backend\PostCatalogueController;
@@ -96,6 +97,29 @@ Route::group(['prefix' => 'post'], function () {
     Route::get('category/{id}', [FontendPostController::class, 'postInCategory'])->where(['id' => '[0-9]+'])->name('post.category');
     Route::get('detail/{slug}', [FontendPostController::class, 'detail'])->name('post.detail');
 });
+
+ // PROFILE USER
+    Route::get('/profile', [FontendUserController::class, 'profile'])->name('profile.user');
+    Route::get('/profile/change-pass', [FontendUserController::class, 'changeViewProfile'])->name('profile.change-view');
+    Route::post('/profile/change-pass', [FontendUserController::class, 'changeSubmitProfile'])->name('profile.change-submit');
+    Route::get('/confirm-password-change/{token}', [FontendUserController::class, 'confirmPasswordChange'])->name('confirm.password.change');
+    Route::get('/profile/edit', [FontendUserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/edit', [FontendUserController::class, 'updateProfile'])->name('profile.update');
+
+    // account 
+    Route::group(['prefix' => 'account'], function () {
+        Route::get('info', [FontendUserController::class, 'info'])->name('account.info');
+        Route::get('view_order', [FontendOrderController::class, 'view_order'])->name('account.order');
+        Route::get('view_promotion', [FPromotionController::class, 'view_promotion'])->name('account.promotions');
+        Route::get('/view_promotion/{id}', [FPromotionController::class, 'show'])->name('account.promotion.show');
+        Route::get('order/detail/{id}', [FontendOrderController::class, 'detail'])->where(['id' => '[0-9]+'])->name('account.order.detail');
+    });
+
+    Route::group(['prefix' => 'cart'], function () {
+        Route::get('index', [AjaxCartController::class, 'index'])->name('cart.index');
+        Route::post('/apply-discount', [AjaxCartController::class, 'applyPromotion'])->name('cart.applyDiscount');
+        Route::post('/remove-voucher/{voucherId}', [AjaxCartController::class, 'removeVoucher'])->name('cart.removeVoucher');
+    });
 
 Route::group(['prefix' => 'cart'], function () {
     Route::get('index', [AjaxCartController::class, 'index'])->name('cart.index');
@@ -209,6 +233,12 @@ Route::post('/password/verify-otp', [ForgotPasswordController::class, 'verifyOtp
 Route::get('/password/resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.otp.resend');
 Route::get('/password/reset', [ForgotPasswordController::class, 'resetForm'])->name('password.reset');
 Route::post('/password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
+Route::get('auth/google', [LoginController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+Route::get('auth/facebook', [LoginController::class, 'redirectToFacebook'])->name('auth.facebook');
+Route::get('auth/facebook/callback', [LoginController::class, 'handleFacebookCallback'])->name('auth.facebook.callback');
 
 Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 //Page 404
