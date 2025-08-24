@@ -53,7 +53,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/receive/{promotion}', [FPromotionController::class, 'receivePromotion'])->name('promotion.receive');
 });
 
-
 //FRONTEND
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
