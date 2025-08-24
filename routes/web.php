@@ -263,6 +263,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/producreview-data', [ProductReviewController::class, 'getdata']);
     Route::post('/producreview-update-admin', [ProductReviewController::class, 'updateadmin']);
     Route::post('/producreview-delete-admin', [ProductReviewController::class, 'deleteadmin']);
+    });
 });
 
 
