@@ -18,7 +18,7 @@
                                 class="text-decoration-none text-dark fz-15 fw-normal">Giỏ hàng</a>
                         </li>
                         <li class="list-unstyled menu-footer-item pt-2 pb-2">
-                            <a href="{{ route('wishlist.index') }}"
+                            <a href="#"
                                 class="text-decoration-none text-dark fz-15 fw-normal">Yêu thích</a>
                         </li>
                     </ul>

@@ -72,14 +72,26 @@ class CartController extends FontendController
                 'redirect' => route('auth.login'),
             ], 401);
         }
+
         try {
-            $carts = $this->cartService->create($request);
+            $cartItem = $this->cartService->create($request); 
             $cart = $this->cartService->all();
             flash()->success('Sản phẩm đã được thêm vào giỏ hàng.');
             return response()->json([
                 'code' => 10,
                 'message' => 'Sản phẩm đã được thêm vào giỏ hàng.',
                 'success' => 'Sản phẩm đã được thêm vào giỏ hàng.',
+                'cartItem' => $cartItem,
+                'carts' => $cart->cartItems,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('CartController::addToCart error: ' . $e->getMessage());
+            return response()->json([
+                'code' => 11,
+                'message' => $e->getMessage() ?: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.',
+            ], 400);
+        }
+    }
                 'carts' => $carts,
                 'cartItem' => $cart->cartItems,
             ]);
@@ -90,7 +102,6 @@ class CartController extends FontendController
             ], 500);
         }
     }
-
     public function updateCart(Request $request)
     {
         if (!Auth::check()) {
@@ -223,7 +234,6 @@ class CartController extends FontendController
             'data' => $arrayIdChecked
         ]);
     }
-    
     public function getOrderByCartId(Request $request)
     {
         $arrayId = session('array_id', []);
@@ -240,143 +250,6 @@ class CartController extends FontendController
             'array_id' => $arrayId,
         ]);
     }
-
-
-
-
-    // public function applyPromotion(Request $request)
-    // {
-    //     $promotionCode = $request->input('promotion_code');
-    //     $promotions = session()->get('promotions', []);
-
-       
-    //     $userPromotion = Promotion::where('code', $promotionCode)->first();
-
-    //     if (!$userPromotion) {
-    //         flash()->error('Mã không tồn tại!');
-    //         return redirect()->back()->with('error', '');
-    //     }
-    
-    //     $userVoucher = UserVoucher::where('promotion_id', $userPromotion->id)
-    //         ->where('user_id', Auth::id())
-    //         ->first();
-    
-    //     if ($userVoucher && $userVoucher->isUsed == 0) {
-    //         flash()->error('Mã khuyến mãi này đã được sử dụng.');
-    //         return redirect()->back()->with('error', 'Mã khuyến mãi này đã được sử dụng.');
-    //     }
-    //     //
-
-    //     if (in_array($promotionCode, array_column($promotions, 'code'))) {
-    //         flash()->error('Mã khuyến mãi này đã được áp dụng trước đó.');
-    //         return redirect()->back();
-    //     }
-
-    //     if (count($promotions) >= 2) {
-    //         flash()->error('Không thể áp dụng quá 2 mã khuyến mãi.');
-    //         return redirect()->back();
-    //     }
-
-    //     $userPromotion = Promotion::where('code', $promotionCode)->first();
-    //     if (!$userPromotion) {
-    //         flash()->error('Mã không tồn tại!');
-    //         return redirect()->back()->with('error', '');
-    //     }
-
-    //     $cart = Cart::where('user_id', Auth::id())->first();
-    //     if (!$cart) {
-    //         flash()->error('không tìm thấy giỏ hàng của bạn');
-    //         return redirect()->back();
-    //     }
-
-    //     $cartTotal = $cart->cartItems->sum(function ($item) {
-    //         return $item->price * $item->quantity;
-    //     });
-
-    //     if ($cartTotal < $userPromotion->minimum_amount) {
-    //         flash()->error('Tổng đơn hàng không đủ để áp dụng mã khuyến mãi này.');
-    //         return redirect()->back();
-    //     }
-
-    //     // Lưu original_price nếu chưa có trước khi áp dụng giảm giá
-    //     // foreach ($cart->cartItems as $item) {
-    //     //     if (is_null($item->original_price)) {
-    //     //         $item->original_price = $item->price;
-    //     //         $item->save();
-    //     //     }
-    //     // }
-
-    //     $totalDiscount = session()->get('total_discount', 0);
-    //     $canApplyPromotion = false;
-    //     // New condition: Prevent applying same type if already applied
-    //     if (in_array($userPromotion->apply_for, array_column($promotions, 'apply_for'))) {
-    //         flash()->error('Không thể áp dụng nhiều mã giảm giá cùng loại.');
-
-    //         return redirect()->back();
-    //     }
-
-    //     if ($userPromotion->apply_for === 'specific_products') {
-    //         if (in_array('all', array_column($promotions, 'apply_for'))) {
-    //             flash()->error('Không thể áp dụng mã cho sản phẩm cụ thể khi đã có mã giảm giá toàn bộ.');
-
-    //             return redirect()->back();
-    //         }
-
-    //         $promotionProducts = PromotionProductVariant::where('promotion_id', $userPromotion->id)
-    //             ->pluck('product_id')
-    //             ->toArray();
-
-    //         foreach ($cart->cartItems as $item) {
-    //             if (in_array($item->product_id, $promotionProducts)) {
-    //                 $discountAmount = min($item->price, $userPromotion->discount);
-    //                 $item->price -= $discountAmount;
-    //                 $totalDiscount += $discountAmount;
-    //                 $canApplyPromotion = true;
-    //             }
-    //         }
-
-    //         if (!$canApplyPromotion) {
-    //             flash()->error('Không có sản phẩm nào trong giỏ hàng đủ điều kiện.');
-
-    //             return redirect()->back();
-    //         }
-    //     } elseif ($userPromotion->apply_for === 'all') {
-    //         if (in_array('specific_products', array_column($promotions, 'apply_for'))) {
-    //             flash()->error('Không thể áp dụng mã cho toàn bộ khi đã có mã sản phẩm cụ thể.');
-
-    //             return redirect()->back();
-    //         }
-
-    //         session()->put('discount', $userPromotion->discount);
-    //         $totalDiscount += $userPromotion->discount;
-    //         $canApplyPromotion = true;
-    //     } elseif ($userPromotion->apply_for === 'freeship') {
-    //         if (in_array('freeship', array_column($promotions, 'apply_for'))) {
-    //             flash()->error('Đã có mã miễn phí vận chuyển.');
-    //             return redirect()->back();
-    //         }
-
-    //         session()->put('shipping_fee', 0);
-    //         $canApplyPromotion = true;
-    //     }
-
-    //     if ($canApplyPromotion) {
-    //         $promotions[] = [
-    //             'code' => $userPromotion->code,
-    //             'apply_for' => $userPromotion->apply_for,
-    //             'discount' => $userPromotion->discount
-    //         ];
-    //         session()->put('promotions', $promotions);
-    //         session()->put('total_discount', $totalDiscount);
-
-    //         flash()->success('Mã giảm giá đã được áp dụng thành công.');
-    //         return redirect()->back();
-    //     }
-
-    //     flash()->error('Không thể áp dụng mã giảm giá.');
-    //     return redirect()->back();
-    // }
-
 
     public function applyPromotion(Request $request)
     {
@@ -426,7 +299,6 @@ class CartController extends FontendController
 
         $totalDiscount = session()->get('total_discount', 0);
         $canApplyPromotion = false;
-        
         // Prevent applying same type if already applied
         if (in_array($userPromotion->apply_for, array_column($promotions, 'apply_for'))) {
             flash()->error('Không thể áp dụng nhiều mã giảm giá cùng loại.');
@@ -465,6 +337,11 @@ class CartController extends FontendController
 
             // FIX: Calculate current cart total after existing discounts
             $currentCartTotal = $cartTotal - $totalDiscount;
+
+
+            // FIX: Ensure discount doesn't make total negative
+            $actualDiscount = min($currentCartTotal, $userPromotion->discount);
+
             
             // FIX: Ensure discount doesn't make total negative
             $actualDiscount = min($currentCartTotal, $userPromotion->discount);
@@ -490,9 +367,14 @@ class CartController extends FontendController
 
         if ($canApplyPromotion) {
             // FIX: Store actual applied discount amount, not the original discount value
+            $appliedDiscount = ($userPromotion->apply_for === 'all') ?
+                $actualDiscount : $userPromotion->discount;
+
+
             $appliedDiscount = ($userPromotion->apply_for === 'all') ? 
                 $actualDiscount : $userPromotion->discount;
                 
+
             $promotions[] = [
                 'code' => $userPromotion->code,
                 'apply_for' => $userPromotion->apply_for,
@@ -567,4 +449,7 @@ class CartController extends FontendController
         flash()->error('Không tìm thấy mã giảm giá.');
         return redirect()->back();
     }
+
+}
+
 }
