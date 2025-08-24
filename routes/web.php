@@ -11,6 +11,8 @@ use App\Http\Controllers\Ajax\ProductController as AjaxProductController;
 use App\Http\Controllers\Ajax\CartController as AjaxCartController;
 use App\Http\Controllers\Ajax\WishlistController as AjaxWishlistController;
 use App\Http\Controllers\Ajax\OrderController as AjaxOrderController;
+use App\Http\Controllers\Fontend\OrderController as FontendOrderController;
+use App\Http\Controllers\Backend\OrderController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
 use App\Http\Controllers\Fontend\PostController as FontendPostController;
@@ -28,6 +30,8 @@ use App\Http\Controllers\Fontend\FPromotionController;
 use App\Http\Controllers\Backend\ProductCatalogueController;
 use App\Http\Controllers\Backend\PostCatalogueController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Fontend\MomoController;
+use App\Http\Controllers\Fontend\VnpayController;
 
 
 // AJAX
@@ -37,6 +41,17 @@ Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'
 Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
 Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
+
+// CART AJAX
+Route::post('/ajax/cart/addToCart', [AjaxCartController::class, 'addToCart'])->name('ajax.cart.addToCart');
+Route::post('/ajax/cart/updateCart', [AjaxCartController::class, 'updateCart'])->name('ajax.cart.updateCart');
+Route::get('/ajax/cart/LoadOrderByCartId', [AjaxCartController::class, 'LoadOrderByCartId'])->name('ajax.cart.LoadOrderByCartId');
+Route::post('/ajax/cart/sessionOrderByCartId', [AjaxCartController::class, 'sessionOrderByCartId'])->name('ajax.cart.sessionOrderByCartId');
+Route::get('/ajax/cart/getOrderByCartId', [AjaxCartController::class, 'getOrderByCartId'])->name('ajax.cart.getOrderByCartId');
+Route::post('/ajax/cart/clearSessionId', [AjaxCartController::class, 'clearSessionId'])->name('ajax.cart. ');
+Route::delete('/ajax/cart/destroyCart', [AjaxCartController::class, 'destroyCart'])->name('ajax.cart.destroyCart');
+Route::delete('/ajax/cart/clearCart', [AjaxCartController::class, 'clearCart'])->name('ajax.cart.clearCart');
+
 // WEB ROUTES
 Route::get('/', [AuthController::class, 'index'])->name('home');
 // AUTH
@@ -51,7 +66,25 @@ Route::middleware(['auth'])->group(function () {
     //promotion
     Route::get('/promotion', [FPromotionController::class, 'index'])->name('promotion.home_index');
     Route::post('/receive/{promotion}', [FPromotionController::class, 'receivePromotion'])->name('promotion.receive');
+
+    // ORDER 
+    Route::group(['prefix' => 'order'], function () {
+        Route::get('checkout', [FontendOrderController::class, 'checkout'])->name('order.checkout');
+        Route::post('store', [FontendOrderController::class, 'store'])->name('store.order');
+        Route::get('success', [FontendOrderController::class, 'success'])->name('order.success');
+        Route::get('failed', [FontendOrderController::class, 'failed'])->name('order.failed');
+    });
+
+    // PAYMENT VNPAY
+    Route::get('return/vnpay', [VnpayController::class, 'vnpayReturn'])->name('vnpay.return');
+    Route::get('return/vnpay_ipn', [VnpayController::class, 'vnpayIpn'])->name('vnpay.ipn');
+
+    // PAYMENT momo
+    Route::get('return/momo', [MomoController::class, 'momoReturn'])->name('momo.return');
+    Route::get('return/momo_ipn', [MomoController::class, 'momoIpn'])->name('momo.ipn');
+
 });
+    
 
 //FRONTEND
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
