@@ -17,6 +17,7 @@ use App\Http\Controllers\Backend\AttributeCatalogueController;
 use App\Http\Controllers\Backend\AttributeController;
 use App\Http\Controllers\Ajax\AttributeController as AjaxAttributeController;
 use App\Http\Controllers\Backend\ProductCatalogueController;
+use App\Http\Controllers\Backend\PostCatalogueController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -30,27 +31,8 @@ Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'get
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
 // WEB ROUTES
 Route::get('/', [AuthController::class, 'index'])->name('home');
-// AUTH
-Route::get('login', [LoginController::class, 'index'])->name('auth.login');
-Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
-Route::get('register', [RegisterController::class, 'index'])->name('auth.register');
-Route::post('register-store', [RegisterController::class, 'register'])->name('store.register');
-Route::get('/confirm-registration/{token}', [RegisterController::class, 'confirmRegistration'])->name('confirm.registration');
 
-Route::get('/password/confirm_email', [ForgotPasswordController::class, 'emailForm'])->name('password.confirm_email');
-Route::post('/password/email', [ForgotPasswordController::class, 'sendEmail'])->name('password.email');
-Route::get('/password/verify-otp', [ForgotPasswordController::class, 'otpForm'])->name('password.otp');
-Route::post('/password/verify-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.otp.submit');
-Route::get('/password/resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.otp.resend');
-Route::get('/password/reset', [ForgotPasswordController::class, 'resetForm'])->name('password.reset');
-Route::post('/password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
 
-Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
-
-//Page 404
-Route::fallback(function () {
-    return view('fontend.error.404');
-});
 //FRONEND
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
@@ -97,16 +79,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
         // Route::delete('destroy/{id}', [UserController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.destroy');
     });
 
-    //posts
-    Route::group(['prefix' => 'post'], function () {
-        Route::get('index', [PostController::class, 'index'])->name('post.index');
-        Route::get('create', [PostController::class, 'create'])->name('post.create');
-        Route::post('store', [PostController::class, 'store'])->name('post.store');
-        Route::get('update/{slug}', [PostController::class, 'update'])->name('post.update');
-        Route::post('edit/{slug}', [PostController::class, 'edit'])->name('post.edit');
-        Route::get('delete/{id}', [PostController::class, 'delete'])->where(['id' => '[0-9]+'])->name('post.delete');
-        Route::delete('destroy/{id}', [PostController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('post.destroy');
-    });
         // attribute catalogue
     Route::group(['prefix' => 'attribute/catalogue'], function () {
         Route::get('index', [AttributeCatalogueController::class, 'index'])->name('attribute.catalogue.index');
@@ -137,8 +109,47 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [ProductCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('product.catalogue.delete');
         Route::delete('destroy/{id}', [ProductCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('product.catalogue.destroy');
     });
+    //posts
+    Route::group(['prefix' => 'post'], function () {
+        Route::get('index', [PostController::class, 'index'])->name('post.index');
+        Route::get('create', [PostController::class, 'create'])->name('post.create');
+        Route::post('store', [PostController::class, 'store'])->name('post.store');
+        Route::get('update/{slug}', [PostController::class, 'update'])->name('post.update');
+        Route::post('edit/{slug}', [PostController::class, 'edit'])->name('post.edit');
+        Route::get('delete/{id}', [PostController::class, 'delete'])->where(['id' => '[0-9]+'])->name('post.delete');
+        Route::delete('destroy/{id}', [PostController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('post.destroy');
+    });
+    //post catalogues
+    Route::group(['prefix' => 'post/catalogue'], function () {
+        Route::get('index', [PostCatalogueController::class, 'index'])->name('post.catalogue.index');
+        Route::get('create', [PostCatalogueController::class, 'create'])->name('post.catalogue.create');
+        Route::post('store', [PostCatalogueController::class, 'store'])->name('post.catalogue.store');
+        Route::get('update/{slug}', [PostCatalogueController::class, 'update'])->name('post.catalogue.update');
+        Route::post('edit/{slug}', [PostCatalogueController::class, 'edit'])->name('post.catalogue.edit');
+        Route::get('delete/{id}', [PostCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('post.catalogue.delete');
+        Route::delete('destroy/{id}', [PostCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('post.catalogue.destroy');
+    });
     //Doanh thu
     Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
     Route::post('/admin/thong-ke-data', [RevenueController::class, 'Thongke']);
 });
+// AUTH
+Route::get('login', [LoginController::class, 'index'])->name('auth.login');
+Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
+Route::get('register', [RegisterController::class, 'index'])->name('auth.register');
+Route::post('register-store', [RegisterController::class, 'register'])->name('store.register');
+Route::get('/confirm-registration/{token}', [RegisterController::class, 'confirmRegistration'])->name('confirm.registration');
 
+Route::get('/password/confirm_email', [ForgotPasswordController::class, 'emailForm'])->name('password.confirm_email');
+Route::post('/password/email', [ForgotPasswordController::class, 'sendEmail'])->name('password.email');
+Route::get('/password/verify-otp', [ForgotPasswordController::class, 'otpForm'])->name('password.otp');
+Route::post('/password/verify-otp', [ForgotPasswordController::class, 'verifyOtp'])->name('password.otp.submit');
+Route::get('/password/resend-otp', [ForgotPasswordController::class, 'resendOtp'])->name('password.otp.resend');
+Route::get('/password/reset', [ForgotPasswordController::class, 'resetForm'])->name('password.reset');
+Route::post('/password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
+Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+//Page 404
+Route::fallback(function () {
+    return view('fontend.error.404');
+});
