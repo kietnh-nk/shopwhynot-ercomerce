@@ -8,6 +8,8 @@ use App\Http\Controllers\Fontend\HomeController;
 use App\Http\Controllers\Fontend\ShopController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
+use App\Http\Controllers\Ajax\ProductController as AjaxProductController;
+use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserCatalogueController;
 use App\Http\Controllers\Backend\UserController;
@@ -28,6 +30,15 @@ Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'
 // ATTRIBUTE
 Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
+Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
+// WEB ROUTES
+Route::get('/', [AuthController::class, 'index'])->name('home');
+// AUTH
+Route::get('login', [LoginController::class, 'index'])->name('auth.login');
+Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
+Route::get('register', [RegisterController::class, 'index'])->name('auth.register');
+Route::post('register-store', [RegisterController::class, 'register'])->name('store.register');
+Route::get('/confirm-registration/{token}', [RegisterController::class, 'confirmRegistration'])->name('confirm.registration');
 
 // FRONTEND REQUIRED LOGIN
 Route::middleware(['auth'])->group(function () {
@@ -102,6 +113,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('edit/{slug}', [AttributeController::class, 'edit'])->name('attribute.edit');
         Route::get('delete/{id}', [AttributeController::class, 'delete'])->where(['id' => '[0-9]+'])->name('attribute.delete');
         Route::delete('destroy/{id}', [AttributeController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('attribute.destroy');
+    });
+        //product
+    Route::group(['prefix' => 'product'], function () {
+        Route::get('index', [ProductController::class, 'index'])->name('product.index');
+        Route::get('create', [ProductController::class, 'create'])->name('product.create');
+        Route::post('store', [ProductController::class, 'store'])->name('product.store');
+        Route::get('update/{slug}', [ProductController::class, 'update'])->name('product.update');
+        Route::post('edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
+        Route::get('delete/{id}', [ProductController::class, 'delete'])->where(['id' => '[0-9]+'])->name('product.delete');
+        Route::delete('destroy/{id}', [ProductController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('product.destroy');
     });
         // product catalogue
     Route::group(['prefix' => 'product/catalogue'], function () {
