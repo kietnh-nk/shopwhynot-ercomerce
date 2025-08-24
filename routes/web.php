@@ -6,8 +6,16 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Fontend\HomeController;
 use App\Http\Controllers\Fontend\ShopController;
+use App\Http\Controllers\Ajax\AttributeController as AjaxAttributeController;
+use App\Http\Controllers\Ajax\ProductController as AjaxProductController;
+use App\Http\Controllers\Ajax\CartController as AjaxCartController;
+use App\Http\Controllers\Ajax\WishlistController as AjaxWishlistController;
+use App\Http\Controllers\Ajax\OrderController as AjaxOrderController;
 use App\Http\Controllers\Ajax\SearchController as AjaxSearchController;
 use App\Http\Controllers\Fontend\ProductController as FontendProductController;
+use App\Http\Controllers\Fontend\PostController as FontendPostController;
+use App\Http\Controllers\Ajax\ProductController as AjaxProductController;
+use App\Http\Controllers\Backend\ProductController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\UserCatalogueController;
 use App\Http\Controllers\Backend\UserController;
@@ -28,8 +36,22 @@ Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'
 // ATTRIBUTE
 Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
+Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
 // WEB ROUTES
 Route::get('/', [AuthController::class, 'index'])->name('home');
+// AUTH
+Route::get('login', [LoginController::class, 'index'])->name('auth.login');
+Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
+Route::get('register', [RegisterController::class, 'index'])->name('auth.register');
+Route::post('register-store', [RegisterController::class, 'register'])->name('store.register');
+Route::get('/confirm-registration/{token}', [RegisterController::class, 'confirmRegistration'])->name('confirm.registration');
+
+// FRONTEND REQUIRED LOGIN
+Route::middleware(['auth'])->group(function () {
+    //promotion
+    Route::get('/promotion', [FPromotionController::class, 'index'])->name('promotion.home_index');
+    Route::post('/receive/{promotion}', [FPromotionController::class, 'receivePromotion'])->name('promotion.receive');
+});
 
 
 //FRONTEND
@@ -51,6 +73,36 @@ Route::get('return_and_warranty_policy', [HomeController::class, 'return_and_war
 Route::get('about_us', [HomeController::class, 'about_us'])->name('home.about_us');
 Route::get('security_center', [HomeController::class, 'security_center'])->name('home.security_center');
 
+// AJAX
+//SEARCH SUGGESTION
+Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'])->name('ajax.search.suggestions');
+// ATTRIBUTE 
+Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
+Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
+Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
+// CART AJAX
+Route::post('/ajax/cart/addToCart', [AjaxCartController::class, 'addToCart'])->name('ajax.cart.addToCart');
+Route::post('/ajax/cart/updateCart', [AjaxCartController::class, 'updateCart'])->name('ajax.cart.updateCart');
+Route::get('/ajax/cart/LoadOrderByCartId', [AjaxCartController::class, 'LoadOrderByCartId'])->name('ajax.cart.LoadOrderByCartId');
+Route::post('/ajax/cart/sessionOrderByCartId', [AjaxCartController::class, 'sessionOrderByCartId'])->name('ajax.cart.sessionOrderByCartId');
+Route::get('/ajax/cart/getOrderByCartId', [AjaxCartController::class, 'getOrderByCartId'])->name('ajax.cart.getOrderByCartId');
+Route::post('/ajax/cart/clearSessionId', [AjaxCartController::class, 'clearSessionId'])->name('ajax.cart. ');
+Route::delete('/ajax/cart/destroyCart', [AjaxCartController::class, 'destroyCart'])->name('ajax.cart.destroyCart');
+Route::delete('/ajax/cart/clearCart', [AjaxCartController::class, 'clearCart'])->name('ajax.cart.clearCart');
+
+// WISHLIST AJAX
+Route::post('/ajax/wishlist/toggle', [AjaxWishlistController::class, 'toggle'])->name('ajax.wishlist.toggle');
+Route::group(['prefix' => 'post'], function () {
+    Route::get('page', [FontendPostController::class, 'index'])->name('post.page');
+    Route::get('category/{id}', [FontendPostController::class, 'postInCategory'])->where(['id' => '[0-9]+'])->name('post.category');
+    Route::get('detail/{slug}', [FontendPostController::class, 'detail'])->name('post.detail');
+});
+
+Route::group(['prefix' => 'cart'], function () {
+    Route::get('index', [AjaxCartController::class, 'index'])->name('cart.index');
+    Route::post('/apply-discount', [AjaxCartController::class, 'applyPromotion'])->name('cart.applyDiscount');
+    Route::post('/remove-voucher/{voucherId}', [AjaxCartController::class, 'removeVoucher'])->name('cart.removeVoucher');
+});
 
 //BACKEND
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -98,6 +150,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [AttributeController::class, 'delete'])->where(['id' => '[0-9]+'])->name('attribute.delete');
         Route::delete('destroy/{id}', [AttributeController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('attribute.destroy');
     });
+        //product
+    Route::group(['prefix' => 'product'], function () {
+        Route::get('index', [ProductController::class, 'index'])->name('product.index');
+        Route::get('create', [ProductController::class, 'create'])->name('product.create');
+        Route::post('store', [ProductController::class, 'store'])->name('product.store');
+        Route::get('update/{slug}', [ProductController::class, 'update'])->name('product.update');
+        Route::post('edit/{slug}', [ProductController::class, 'edit'])->name('product.edit');
+        Route::get('delete/{id}', [ProductController::class, 'delete'])->where(['id' => '[0-9]+'])->name('product.delete');
+        Route::delete('destroy/{id}', [ProductController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('product.destroy');
+    });
         // product catalogue
     Route::group(['prefix' => 'product/catalogue'], function () {
         Route::get('index', [ProductCatalogueController::class, 'index'])->name('product.catalogue.index');
@@ -132,6 +194,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
     Route::post('/admin/thong-ke-data', [RevenueController::class, 'Thongke']);
 });
+
+
 // AUTH
 Route::get('login', [LoginController::class, 'index'])->name('auth.login');
 Route::post('store-login', [LoginController::class, 'login'])->name('store.login');

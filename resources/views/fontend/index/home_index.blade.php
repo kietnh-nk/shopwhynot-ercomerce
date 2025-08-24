@@ -1,6 +1,6 @@
 @extends('fontend.home.layout')
 @section('page_title')
-    Bee Cloudy
+    Why Not Shop
 @endsection
 @section('content')
     <div class="" id="app">
@@ -274,24 +274,60 @@
                                                 </span>
                                             </div>
                                             <div class="box-action">
-                                                <a href="{{ route('cart.index') }}"
-                                                    class="action-cart-item-buy addToCart buyNow"
-                                                    data-id="{{ $productSupperSale->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
-                                                    <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
-                                                    <span>Mua ngay</span>
-                                                </a>
-                                                <a href="" class="action-cart-item-add addToCart"
-                                                    data-id="{{ $productSupperSale->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
-                                                    <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
-                                                    <span>thêm giỏ hàng</span>
-                                                </a>
-                                            </div>
+    <a href="{{ route('cart.index') }}"
+        class="action-cart-item-buy addToCart buyNow"
+        data-id="{{ $productSupperSale->id }}"
+        data-product-variant-id="{{ $variantFirst->id }}"
+        data-product-variant-price="{{ $variantFirst->price }}"
+        data-attributeId="{{ @json_encode($variantFirst->code) }}"
+        data-stock="{{ $variantFirst->stock }}">
+        <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
+        <span>Mua ngay</span>
+    </a>
+    <a href="javascript:void(0)" 
+        class="action-cart-item-add addToCart"
+        data-id="{{ $productSupperSale->id }}"
+        data-product-variant-id="{{ $variantFirst->id }}"
+        data-product-variant-price="{{ $variantFirst->price }}"
+        data-attributeId="{{ @json_encode($variantFirst->code) }}"
+        data-stock="{{ $variantFirst->stock }}">
+        <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
+        <span>Thêm giỏ hàng</span>
+    </a>
+</div>
+<script>
+document.querySelectorAll(".addToCart").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        let productId = this.dataset.id;
+        let variantId = this.dataset.productVariantId;
+
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                product_id: productId,
+                variant_id: variantId,
+                quantity: 1
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'error') {
+                Swal.fire({ icon: 'warning', title: data.message });
+            } else {
+                Swal.fire({ icon: 'success', title: data.message, timer: 1200, showConfirmButton: false });
+            }
+        })
+        .catch(err => console.error(err));
+    });
+});
+
+</script>
+
                                             <div class="head-card d-flex p-1">
                                                 <span class="fz-14 ">
                                                     Mã sản phẩm
