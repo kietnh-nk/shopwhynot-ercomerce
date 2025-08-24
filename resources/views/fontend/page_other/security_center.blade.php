@@ -19,19 +19,19 @@ Bảo mật
                 <h2 class="pb-4 text-center underline-text">Chính sách bảo mật thông tin cá nhân</h2>
                 <br>
                 <strong class="text-center pt-5">
-                    Chào mừng bạn đến với BeeCloudy Khi truy cập và sử dụng trang web này,
+                    Chào mừng bạn đến với WhyNotShop Khi truy cập và sử dụng trang web này,
                     bạn đồng ý tuân theo các điều khoản và điều kiện sau đây. Vui lòng đọc kỹ để hiểu rõ quyền
                     và nghĩa vụ của mình.
                 </strong>
 
                 <h5 class="pt-4">1. Mục đích thu thập</h5>
-                <p>BeeCloudy thu thập thông tin cá nhân chỉ cần thiết nhằm phục vụ cho các mục đích:</p>
+                <p>WhyNotShop thu thập thông tin cá nhân chỉ cần thiết nhằm phục vụ cho các mục đích:</p>
                 <p class="mb-0">
                     <span class="fw-bold">• Đơn Hàng</span>: để xử lý các vấn đề liên quan đến đơn đặt hàng của bạn; <br>
                     <span class="fw-bold">• Duy Trì Tài Khoản</span>: để tạo và duy trình tài khoản của bạn với chúng tôi, bao gồm cả các chương trình khách hàng thân thiết hoặc các chương trình thưởng đi kèm với tài khoản của bạn; <br>
                     <span class="fw-bold">• Dịch Vụ Chăm Sóc Khách Hàng</span>: bao gồm các phản hồi cho các yêu cầu, khiếu nại và phản hồi của bạn; <br>
                     <span class="fw-bold">• Cá Nhân Hóa</span>: Chúng tôi có thể tổ hợp dữ liệu được thu thập để có một cái nhìn hoàn chỉnh hơn về một người tiêu dùng và từ đó cho phép chúng tôi phục vụ tốt hơn với sự cá nhân hóa mạnh hơn ở các khía cạnh, bao gồm nhưng không giới hạn:
-                <p class="p-0 mb-0 ms-3">• Để cải thiện và cá nhân hóa trải nghiệm của bạn trên trang mua sắm thương mại điện tử BeeCloudy
+                <p class="p-0 mb-0 ms-3">• Để cải thiện và cá nhân hóa trải nghiệm của bạn trên trang mua sắm thương mại điện tử WhyNotShop
                     <br> • Để cải thiện các tiện ích, dịch vụ, điều chỉnh chúng phù hợp với các nhu cầu được cá thể hóa và đi đến những ý tưởng dịch vụ mới
                     <br> • Để phục vụ bạn với những giới thiệu, quảng cáo được điều chỉnh phù hợp với sự quan tâm của bạn.
                 </p>
@@ -40,10 +40,10 @@ Bảo mật
                 </p>
 
                 <h5 class="">2. Phạm vi thu thập</h5>
-                <p>BeeCloudy thu thập thông tin khách hàng khi:</p>
+                <p>WhyNotShop thu thập thông tin khách hàng khi:</p>
                 <p>
                     <span class="fw-bold">• Khách hàng giao dịch trực tiếp với chúng tôi</span>
-                <p class="ms-3"> Thông tin cá nhân của các bạn cung cấp chủ yếu trên trang mua sắm điện tử của chúng tôi BeeCloudy. Thông tin bao gồm: Họ tên, ngày sinh, địa chỉ, số điện thoại, email, tên đăng nhập và mật khẩu (Tài khoản đăng nhập), câu hỏi/ câu trả lời bảo mật, chi tiết thanh toán, chi tiết thanh toán bằng thẻ hoặc chi tiết tài khoản ngân hàng.
+                <p class="ms-3"> Thông tin cá nhân của các bạn cung cấp chủ yếu trên trang mua sắm điện tử của chúng tôi WhyNotShop. Thông tin bao gồm: Họ tên, ngày sinh, địa chỉ, số điện thoại, email, tên đăng nhập và mật khẩu (Tài khoản đăng nhập), câu hỏi/ câu trả lời bảo mật, chi tiết thanh toán, chi tiết thanh toán bằng thẻ hoặc chi tiết tài khoản ngân hàng.
                     <br>
                     Chi tiết đơn đặt hàng của bạn được chúng tôi lưu giữ nhưng vì lý do bảo mật nên chúng tôi không công khai trực tiếp được. Tuy nhiên, bạn có thể tiếp cận thông tin bằng cách đăng nhập tài khoản trên trang web. Tại đây, bạn sẽ thấy chi tiết đơn đặt hàng của mình, những sản phẩm đã nhận và những sản phẩm đã gửi và chi tiết email, ngân hàng và bản tin mà bạn đặt theo dõi dài hạn.
                 </p>
@@ -60,13 +60,13 @@ Bảo mật
                 <h5 class="pb-2">3. Thời gian lưu trữ</h5>
                 <p>
                     • Thông tin khách hàng được lưu trữ cho đến khi nhận được yêu cầu huỷ bỏ của khách hàng, hoặc khách hàng tự đăng nhập để huỷ bỏ. <br>
-                    • Mọi thông tin của khách hàng đều được lưu trữ trên máy chủ của BeeCloudy <br>
+                    • Mọi thông tin của khách hàng đều được lưu trữ trên máy chủ của WhyNotShop <br>
                 </p>
                 <h5 class="">4. Thông tin Khách hàng đối với bên thứ ba</h5>
-                <p>BeeCloudy cam kết không cung cấp thông tin khách hàng với bất kì bên thứ ba nào, trừ những trường hợp sau:</p>
+                <p>WhyNotShop cam kết không cung cấp thông tin khách hàng với bất kì bên thứ ba nào, trừ những trường hợp sau:</p>
                 <p>
                     • Các đối tác là bên cung cấp dịch vụ cho chúng tôi liên quan đến thực hiện đơn hàng và chỉ giới hạn trong phạm vi thông tin cần thiết cũng như áp dụng các quy định đảm bảo an ninh, bảo mật các thông tin cá nhân. <br>
-                    • Chúng tôi có thể sử dụng dịch vụ từ một nhà cung cấp dịch vụ là bên thứ ba để thực hiện một số hoạt động liên quan đến trang mua sắm điện tử BeeCloudy và khi đó bên thứ ba này có thể truy cập hoặc xử lý các thông tin cá nhân trong quá trình cung cấp các dịch vụ đó. Chúng tôi yêu cầu các bên thứ ba này tuân thủ mọi luật lệ về bảo vệ thông tin cá nhân liên quan và các yêu cầu về an ninh liên quan đến thông tin cá nhân.
+                    • Chúng tôi có thể sử dụng dịch vụ từ một nhà cung cấp dịch vụ là bên thứ ba để thực hiện một số hoạt động liên quan đến trang mua sắm điện tử WhyNotShop và khi đó bên thứ ba này có thể truy cập hoặc xử lý các thông tin cá nhân trong quá trình cung cấp các dịch vụ đó. Chúng tôi yêu cầu các bên thứ ba này tuân thủ mọi luật lệ về bảo vệ thông tin cá nhân liên quan và các yêu cầu về an ninh liên quan đến thông tin cá nhân.
                     <br> • Các chương trình có tính liên kết, đồng thực hiện, thuê ngoài cho các mục đích được nêu tại Mục 1 và luôn áp dụng các yêu cầu bảo mật thông tin cá nhân.
                     <br> • Yêu cầu pháp lý: Chúng tôi có thể tiết lộ các thông tin cá nhân nếu điều đó do luật pháp yêu cầu và việc tiết lộ như vậy là cần thiết một cách hợp lý để tuân thủ các quy trình pháp lý.
                     <br> • Chuyển giao kinh doanh (nếu có): trong trường hợp sáp nhập, hợp nhất toàn bộ hoặc một phần với công ty khác, người mua sẽ có quyền truy cập thông tin được chúng tôi lưu trữ, duy trì trong đó bao gồm cả thông tin cá nhân.
@@ -74,7 +74,7 @@ Bảo mật
 
                 <h5 class="">5. Cách thức bảo mật thông tin khách hàng</h5>
                 <p>
-                    BeeCloudy luôn nỗ lực để giữ an toàn thông tin cá nhân của khách hàng, chúng tôi đã và đang thực hiện nhiều biện pháp an toàn, bao gồm:
+                    WhyNotShop luôn nỗ lực để giữ an toàn thông tin cá nhân của khách hàng, chúng tôi đã và đang thực hiện nhiều biện pháp an toàn, bao gồm:
                 </p>
 
                 <p>
@@ -93,7 +93,7 @@ Bảo mật
                 <h5 class="">7. Yêu cầu xóa bỏ thông tin cá nhân</h5>
                 <p>
                     • Khách hàng có quyền yêu cầu xóa bỏ hoàn toàn các thông tin cá nhân lưu trữ trên hệ thống của chúng tôi bất cứ khi nào.<br>
-                    • Khách hàng gửi thư điện tử về địa chỉ <span class="fw-bold">beecloudy2024@gmail.com</span> để yêu cầu xóa bỏ thông tin cá nhân hoàn toàn khỏi hệ thống.
+                    • Khách hàng gửi thư điện tử về địa chỉ <span class="fw-bold">whynotshop2025@gmail.com</span> để yêu cầu xóa bỏ thông tin cá nhân hoàn toàn khỏi hệ thống.
                 </p>
                 <h5 class="">8. Thông tin liên hệ</h5>
                 <p>
@@ -102,11 +102,11 @@ Bảo mật
                 <p class="mb-0">
                 <p class="p-0 ms-3">
                     • Gọi điện thoại đến: <span class="fw-bold">0379000358</span>
-                    <br> • Gửi thư điện tử đến địa chỉ email: <span class="fw-bold">beecloudy2024@gmail.com</span>
+                    <br> • Gửi thư điện tử đến địa chỉ email: <span class="fw-bold">whynotshop2025@gmail.com</span>
                 </p>
 
                 <p>
-                    Trên đây là những chính sách bảo mật và điều khoản dịch vụ về thông tin khách hàng của BeeCloudy, quý khách hàng có thể yên tâm sử dụng các dịch vụ, sản phẩm tại BeeCloudy mà không cần lo lắng về khả năng bị ăn cắp thông tin, lộ thông tin hay các rủi ro khác khi mua hàng tại website <a href="https://beecloud.shop/">beecloud.shop</a>
+                    Trên đây là những chính sách bảo mật và điều khoản dịch vụ về thông tin khách hàng của WhyNotShop, quý khách hàng có thể yên tâm sử dụng các dịch vụ, sản phẩm tại WhyNotShop mà không cần lo lắng về khả năng bị ăn cắp thông tin, lộ thông tin hay các rủi ro khác khi mua hàng tại website <a href="https://beecloud.shop/">beecloud.shop</a>
                 </p>
 
             </div>
