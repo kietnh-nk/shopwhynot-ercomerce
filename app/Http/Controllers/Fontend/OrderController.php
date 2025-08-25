@@ -47,7 +47,7 @@ class OrderController extends FontendController
 
     public function view_order(Request $request)
     { {
-            $attributesByOderItem = $this->orderService->findAttributesByCode();
+        $attributesByOderItem = $this->orderService->findAttributesByCode();
             $order_all = $this->orderService->paginateOrderFontend($request);
             $order_pending = $this->orderService->paginateOrderPending($request);
             $order_confirmed = $this->orderService->paginateOrderConfirmed($request);
@@ -78,16 +78,16 @@ class OrderController extends FontendController
         foreach ($promotions as $promotion) {
             $promotionCode = $promotion['code']; // Lấy code từ session
             $userId = auth()->id(); // Lấy ID người dùng hiện tại
-
+    
             // Lấy promotion_id từ bảng Promotion
             $promotionId = Promotion::where('code', $promotionCode)->value('id');
-
+    
             if ($promotionId) {
                 // Gọi hàm updateIsUsed để cập nhật trạng thái mã khuyến mãi
                 $this->updateIsUsed($promotionId, $userId);
             }
         }
-
+        
         // Truyền dữ liệu vào view
         return view('fontend.order.checkout', compact(
             'order',
@@ -104,17 +104,7 @@ class OrderController extends FontendController
 
     public function store(StoreOrderRequest $request)
     {
-        // validate số lượng trước khi tạo đơn
-        foreach ($request->cart_items as $cartItem) {
-            $product = $this->productRepository->findById($cartItem['product_id']);
-
-            if ($cartItem['quantity'] > $product->stock) {
-                return redirect()->back()->with('error', 'Số lượng vượt quá tồn kho!');
-            }
-        }
-
         $order = $this->orderService->create($request);
-
         if ($order['payment_method'] !== 'cod') {
             $response = $this->paymentMethod($order);
             if ($response) {
@@ -131,12 +121,13 @@ class OrderController extends FontendController
         } else {
             $this->orderService->updateQuantitySoldProduct($order);
             $this->orderService->sendMail($order);
+            // xóa cart sao khi thanh toán hành tất 
             $this->cartService->destroyCartItem($request);
+            //update số lượng và đã bán
             flash()->success('Đặt hàng thành công');
             return redirect()->route('order.success');
         }
     }
-
 
     public function paymentMethod($order = null)
     {
