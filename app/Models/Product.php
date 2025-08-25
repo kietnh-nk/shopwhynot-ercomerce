@@ -47,14 +47,23 @@ class Product extends Model
     {
         return $this->belongsToMany(ProductCatalogue::class, 'product_catalogue_product', 'product_id', 'product_catalogue_id');
     }
-    // khia báo quán hệ vs bảng brand (n)
+    // khai báo quán hệ vs bảng brand (n)
     public function brands(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
-    //khia báo quan hệ với bảng product variant (1pro - nhiều phiên bản)
+    //khai báo quan hệ với bảng product variant (1pro - nhiều phiên bản)
     public function productVariant(): HasMany
     {
         return $this->hasMany(ProductVariant::class, 'product_id', 'id');
+    }
+    
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(WishList::class, 'product_id', 'id');
+    }
+    public function vouchers()
+    {
+        return $this->belongsToMany(Voucher::class, 'voucher_products');
     }
 }

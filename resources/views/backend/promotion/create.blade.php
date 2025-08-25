@@ -46,7 +46,8 @@
                                     @endif
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Số lượng:</label>
+                                    <label class="form-label">Số lượng:<span
+                                            class="text-danger fz-18">*</span></label>
                                     <input type="number" class="form-control" name="usage_limit"
                                         value="{{ old('usage_limit') }}">
                                     @if ($errors->has('usage_limit'))
@@ -109,31 +110,42 @@
                                     <i class="fa fa-gear me-2"></i>Tùy chỉnh
                                 </h6>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-1">
-                                    <!-- Giá trị giảm và điều kiện -->
-                                    <div class="mb-3" id="discount-section">
-                                        <label class="form-label">Giá trị giảm: <span
-                                                class="text-danger fz-18">*</span></label>
-                                        <div class="input-group">
-                                            <input type="number" class="form-control" name="discount"
-                                                value="{{ old('discount') }}" placeholder="Số tiền chiết khấu">
-                                            <span class="input-group-text">VND</span>
-                                        </div>
-                                        @if ($errors->has('discount'))
-                                            <span class="text-danger fz-12 mt-1">{{ $errors->first('discount') }}</span>
-                                        @endif
-                                    </div>
-                                    <div class="">
-                                        <label class="form-label">Đơn hàng tối thiểu</label>
-                                        <div class="input-group">
-                                            <input type="number" name="minimum_amount" class="form-control"
-                                                placeholder="100.000 VND">
-                                            <span class="input-group-text">VND</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           <div class="card-body">
+    <div class="row g-1">
+        <!-- Giá trị giảm -->
+        <div class="mb-3">
+    <label class="form-label">Đơn hàng tối thiểu <span class="text-danger fz-18">*</span></label>
+    <div class="input-group">
+        <input type="text" 
+               name="minimum_amount" 
+               class="form-control currency-input"
+               value="{{ old('minimum_amount') }}"
+               placeholder="100.000 VND">
+        <span class="input-group-text">VND</span>
+    </div>
+    @if ($errors->has('minimum_amount'))
+        <span class="text-danger fz-12 mt-1">{{ $errors->first('minimum_amount') }}</span>
+    @endif
+</div>
+
+<!-- Giá trị giảm -->
+<div class="mb-3" id="discount-section">
+    <label class="form-label">Giá trị giảm: <span class="text-danger fz-18">*</span></label>
+    <div class="input-group">
+        <input type="text" 
+               class="form-control currency-input" 
+               name="discount"
+               value="{{ old('discount') }}" 
+               placeholder="Số tiền chiết khấu">
+        <span class="input-group-text">VND</span>
+    </div>
+    @if ($errors->has('discount'))
+        <span class="text-danger fz-12 mt-1">{{ $errors->first('discount') }}</span>
+    @endif
+</div>
+    </div>
+</div>
+
                         </div>
                         <!-- thời gian áp dụng -->
                         <div class="card mb-3">
@@ -145,7 +157,8 @@
                             <div class="card-body">
                                 <div class="g-3">
                                     <div class=" mb-3">
-                                        <label class="form-label">Bắt đầu</label>
+                                        <label class="form-label">Bắt đầu<span
+                                            class="text-danger fz-18">*</span></label>
                                         <div class="input-group">
                                             <input type="datetime-local" class="form-control" name="start_date"
                                                 value="{{ old('start_date') }}">
@@ -155,7 +168,8 @@
                                         @endif
                                     </div>
                                     <div class=" mb-3">
-                                        <label class="form-label">Kết thúc</label>
+                                        <label class="form-label">Kết thúc<span
+                                            class="text-danger fz-18">*</span></label>
                                         <div class="input-group">
                                             <input type="datetime-local" class="form-control" name="end_date"
                                                 value="{{ old('end_date') }}">
@@ -218,29 +232,55 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const applyForField = document.getElementById('apply-for');
-        const discountSection = document.getElementById('discount-section');
-        const specificProductsSection = document.getElementById('specific-products-section');
+document.addEventListener("DOMContentLoaded", function () {
+    const applyForField = document.getElementById('apply-for');
+    const discountSection = document.getElementById('discount-section');
+    const specificProductsSection = document.getElementById('specific-products-section');
 
-        function toggleFields() {
-            const applyForValue = applyForField.value;
-            if (applyForValue === 'freeship') {
-                discountSection.style.display = 'none';
-                specificProductsSection.style.display = 'none';
-            } else if (applyForValue === 'specific_products') {
-                discountSection.style.display = 'block';
-                specificProductsSection.style.display = 'block';
-            } else {
-                discountSection.style.display = 'block';
-                specificProductsSection.style.display = 'none';
-            }
-        }
+    // Ẩn/hiện trường theo loại áp dụng
+    function toggleFields() {
+        const val = applyForField.value;
+        discountSection.style.display = (val === 'freeship') ? 'none' : 'block';
+        specificProductsSection.style.display = (val === 'specific_products') ? 'block' : 'none';
+    }
 
-        // Hiển thị đúng trường khi load trang
-        toggleFields();
-        applyForField.addEventListener('change', toggleFields);
+    // Format VNĐ khi nhập
+    function formatCurrency(input) {
+        let val = input.value.replace(/\D/g, "");
+        input.value = val ? new Intl.NumberFormat('vi-VN').format(val) : "";
+    }
 
-
+    document.querySelectorAll(".currency-input").forEach(input => {
+        input.addEventListener("input", () => formatCurrency(input));
     });
+
+    // Validate client + loại bỏ dấu chấm trước khi submit
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const discountInput = this.querySelector("input[name='discount']");
+        const minimumInput = this.querySelector("input[name='minimum_amount']");
+
+        const discount = parseInt((discountInput.value || "0").replace(/\D/g, "")) || 0;
+        const minimum = parseInt((minimumInput.value || "0").replace(/\D/g, "")) || 0;
+
+        // Ghi lại value sạch (không dấu chấm) để gửi server
+        discountInput.value = discount;
+        minimumInput.value = minimum;
+
+        // Kiểm tra điều kiện
+        if (minimum <= discount && discount > 0) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Dữ liệu chưa hợp lệ',
+                text: 'Đơn hàng tối thiểu phải lớn hơn giá trị chiết khấu!',
+                confirmButtonText: 'OK'
+            }).then(() => minimumInput.focus());
+        }
+    });
+
+    // Setup ban đầu
+    toggleFields();
+    applyForField.addEventListener('change', toggleFields);
+});
 </script>
+

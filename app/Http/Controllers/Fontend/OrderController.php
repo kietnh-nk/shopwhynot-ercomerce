@@ -46,7 +46,8 @@ class OrderController extends FontendController
     }
 
     public function view_order(Request $request)
-    { {
+    {
+       
         $attributesByOderItem = $this->orderService->findAttributesByCode();
             $order_all = $this->orderService->paginateOrderFontend($request);
             $order_pending = $this->orderService->paginateOrderPending($request);
@@ -63,7 +64,6 @@ class OrderController extends FontendController
                 'order_completed',
                 'attributesByOderItem',
             ));
-        }
     }
 
 

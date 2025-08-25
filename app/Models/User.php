@@ -59,5 +59,26 @@ class User extends Authenticatable
     ];
 
     // Quan hệ với bảng user_catalogues
-    
+    public function userCatalogue(): BelongsTo
+    {
+        return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id');
+    }
+
+    // Quan hệ hasMany với bảng carts
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class, 'user_id', 'id');
+    }
+
+    // Quan hệ hasMany với bảng wishlists
+    public function wishLists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class, 'user_id', 'id');
+    }
+
+    // Quan hệ hasMany với bảng user_vouchers
+    public function userVouchers(): HasMany
+    {
+        return $this->hasMany(UserVoucher::class);
+    }
 }

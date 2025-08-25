@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Services\Interfaces\BaseServiceInterface;
+use App\Services\Interfaces\BaseServiceinteface;
 
 /**
  * Class  BaseService
  * @package App\Services
  */
 
-class BaseService implements BaseServiceInterface
+class BaseServices implements BaseServiceinteface
 {
 
     

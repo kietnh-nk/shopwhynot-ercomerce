@@ -130,14 +130,19 @@
                         }
                     },
                     error: function (xhr) {
-                        var response = JSON.parse(xhr.responseText);
-                        if (xhr.status == 401) {
-                            flasher.error(response.message);
+                        let response = {};
+                        try {
+                            response = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            response = {};
+                        }
+                        let msg = response.message || "Có lỗi xảy ra khi thêm sản phẩm.";
+                        flasher.error(msg);
+                        // Nếu cần chuyển hướng khi lỗi 401
+                        if (xhr.status == 401 && response.redirect) {
                             setTimeout(function () {
                                 window.location.href = response.redirect;
                             }, 1000);
-                        } else {
-                            flasher.error(response.message);
                         }
                     },
                 });
