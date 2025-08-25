@@ -29,5 +29,7 @@ class Attribute extends Model
     }
 
     // khai báo quan hệ với bảng product_variant thông qua bảng pivot
-    
+    public function productVariants ():BelongsToMany {
+        return $this->belongsToMany(ProductVariant::class, 'product_variant_attribute', 'attribute_id', 'product_variant_id');
+    }
 }

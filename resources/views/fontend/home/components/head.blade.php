@@ -12,7 +12,7 @@
     <meta property="og:type" content="product" />
     <meta property="og:price:amount" content="{{$product->del != 0 ? $product->del : $product->price}}" />
     <meta property="og:price:currency" content="VND" />
-    <meta property="og:site_name" content="Why Not Shop" />
+    <meta property="og:site_name" content="BeeCloudy" />
 @endif
 
 <!-- css  -->

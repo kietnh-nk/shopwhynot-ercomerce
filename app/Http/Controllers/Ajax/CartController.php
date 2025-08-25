@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Ajax;
 
 use App\Models\Cart;
@@ -224,7 +223,7 @@ class CartController extends FontendController
             'data' => $arrayIdChecked
         ]);
     }
-
+    
     public function getOrderByCartId(Request $request)
     {
         $arrayId = session('array_id', []);
@@ -294,7 +293,7 @@ class CartController extends FontendController
 
         $totalDiscount = session()->get('total_discount', 0);
         $canApplyPromotion = false;
-
+        
         // Prevent applying same type if already applied
         if (in_array($userPromotion->apply_for, array_column($promotions, 'apply_for'))) {
             flash()->error('Không thể áp dụng nhiều mã giảm giá cùng loại.');
@@ -333,10 +332,10 @@ class CartController extends FontendController
 
             // FIX: Calculate current cart total after existing discounts
             $currentCartTotal = $cartTotal - $totalDiscount;
-
+            
             // FIX: Ensure discount doesn't make total negative
             $actualDiscount = min($currentCartTotal, $userPromotion->discount);
-
+            
             // Only apply if there's actually something to discount
             if ($actualDiscount > 0) {
                 session()->put('discount', $actualDiscount);
@@ -358,9 +357,9 @@ class CartController extends FontendController
 
         if ($canApplyPromotion) {
             // FIX: Store actual applied discount amount, not the original discount value
-            $appliedDiscount = ($userPromotion->apply_for === 'all') ?
+            $appliedDiscount = ($userPromotion->apply_for === 'all') ? 
                 $actualDiscount : $userPromotion->discount;
-
+                
             $promotions[] = [
                 'code' => $userPromotion->code,
                 'apply_for' => $userPromotion->apply_for,

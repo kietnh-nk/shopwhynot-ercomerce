@@ -197,7 +197,7 @@ class ContentController extends Controller
         try {
             $user = Auth::user();
             Content::create([
-                'content'       => $request->content,
+                'content'       => $request->input('content'), // $request->content,
                 'img'           => $request->img,
                 'date'          => Carbon::now(),
                 'user_id'       => $user->id,

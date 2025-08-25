@@ -19,14 +19,14 @@
                 <h2 class="pb-4 text-center underline-text">Điều Khoản Và Điều Kiện</h2>
                 <br>
                 <strong class="text-center pt-5">
-                    Chào mừng bạn đến với WhyNotShop Khi truy cập và sử dụng trang web này,
+                    Chào mừng bạn đến với BeeCloudy Khi truy cập và sử dụng trang web này,
                     bạn đồng ý tuân theo các điều khoản và điều kiện sau đây. Vui lòng đọc kỹ để hiểu rõ quyền
                     và nghĩa vụ của mình.
                 </strong>
 
                 <h5 class="pt-4">1. Giới thiệu và phạm vi</h5>
                 <p>
-                    Trang web WhyNotShop cung cấp các sản phẩm giày dép và phụ kiện thời trang.
+                    Trang web BeeCloudy cung cấp các sản phẩm giày dép và phụ kiện thời trang.
                     Các điều khoản và điều kiện này áp dụng cho mọi khách hàng sử dụng trang web và dịch vụ của chúng tôi.
                 </p>
 
@@ -57,7 +57,7 @@
                     • Khách hàng có quyền đổi trả sản phẩm trong vòng 5 ngày kể từ ngày nhận hàng,
                     với điều kiện sản phẩm còn nguyên vẹn, chưa qua sử dụng và còn tem mác. <br>
                     • Để đổi trả, vui lòng liên hệ bộ phận
-                    chăm sóc khách hàng của chúng tôi qua <a href="mailto:whynotshop2025@gmail.com?subject=Hỗ trợ khách hàng đổi trả&body=Chào đội ngũ hỗ trợ, tôi cần giúp đỡ về...">whynotshop2025@gmail.com</a> hoặc <a href="tel:+84379000358">0379000358</a> <br>
+                    chăm sóc khách hàng của chúng tôi qua <a href="mailto:beecloudy2024@gmail.com?subject=Hỗ trợ khách hàng đổi trả&body=Chào đội ngũ hỗ trợ, tôi cần giúp đỡ về...">beecloudy2024@gmail.com</a> hoặc <a href="tel:+84379000358">0379000358</a> <br>
                 </p>
                 <p>
                     <strong>Vận chuyển và giao nhận:</strong> <br>
@@ -75,7 +75,7 @@
 
                 <h5 class="">5. Quyền và nghĩa vụ của cửa hàng</h5>
                 <p>
-                    • WhyNotShop cam kết cung cấp sản phẩm chính hãng, đúng
+                    • BeeCloudy cam kết cung cấp sản phẩm chính hãng, đúng
                     mô tả và đảm bảo chất lượng. <br>
                     • Chúng tôi sẽ bảo mật thông tin cá nhân của khách hàng và
                     không chia sẻ cho bên thứ ba mà không có sự đồng ý của bạn. <br>
@@ -87,13 +87,13 @@
                 </p>
                 <h5 class="">7. Điều khoản về sở hữu trí tuệ</h5>
                 <p>
-                    Mọi nội dung, hình ảnh, và thương hiệu trên trang web này thuộc sở hữu của WhyNotShop và
+                    Mọi nội dung, hình ảnh, và thương hiệu trên trang web này thuộc sở hữu của BeeCloudy và
                     được bảo vệ bởi luật sở hữu trí tuệ. Nghiêm cấm sao chép, sử dụng mà không có sự đồng ý
                     bằng văn bản từ chúng tôi.
                 </p>
                 <h5 class="">8. Miễn trừ trách nhiệm</h5>
                 <p>
-                    • WhyNotShop không chịu trách nhiệm về sự cố kỹ thuật, lỗi phần mềm,
+                    • BeeCloudy không chịu trách nhiệm về sự cố kỹ thuật, lỗi phần mềm,
                     hoặc các vấn đề ngoài tầm kiểm soát ảnh hưởng đến việc truy cập và sử dụng trang web. <br>
                     • Chúng tôi không chịu trách nhiệm cho bất kỳ thiệt hại gián tiếp
                     nào liên quan đến việc sử dụng sản phẩm. <br>
@@ -106,7 +106,7 @@
                 </p>
                 <h5 class="">10. Luật áp dụng và giải quyết tranh chấp</h5>
                 <p>
-                    Mọi tranh chấp phát sinh từ việc sử dụng trang web và dịch vụ của WhyNotShop sẽ được
+                    Mọi tranh chấp phát sinh từ việc sử dụng trang web và dịch vụ của BeeCloudy sẽ được
                     giải quyết theo pháp luật của Việt Nam.
                     Các bên sẽ nỗ lực giải quyết tranh chấp thông qua thương lượng trước khi đưa ra các cơ quan
                     tài phán có thẩm quyền.

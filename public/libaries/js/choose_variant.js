@@ -236,12 +236,20 @@
         $(".quantity-product-variant").attr("max", productVariantQuantiyMax);
     };
     FS.quantityInsockVariant = (res) => {
-        let quantityInsockVariant = res.productVariant.quantity;
-        if(quantityInsockVariant !== 0 || quantityInsockVariant !== null){
+    let quantityInsockVariant = res.productVariant.quantity;
 
-            $(".quantity-instock").html('( '+quantityInsockVariant+' '+' sản phẩm sẵn có '+')');
-        }
-    };
+    if (quantityInsockVariant > 0) {
+    $(".quantity-instock").html('( ' + quantityInsockVariant + ' sản phẩm sẵn có )');
+    $(".addToCart").removeClass("disabled").css("pointer-events", "auto");
+    $("#btn-buy-now").removeClass("disabled").css("pointer-events", "auto");
+} else {
+    $(".quantity-instock").html('<span class="text-danger">Hết hàng</span>');
+    $(".addToCart").addClass("disabled").css("pointer-events", "none");
+    $("#btn-buy-now").addClass("disabled").css("pointer-events", "none");
+}
+};
+
+
     // gọi hàm
     $(document).ready(function () {
         FS.selectVairantProduct();

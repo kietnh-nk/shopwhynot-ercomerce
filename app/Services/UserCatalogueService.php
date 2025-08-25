@@ -79,7 +79,7 @@ class UserCatalogueService implements UserCatalogueServiceInterface
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e->getMessage();
-            //die();
+            die();
             return false;
         }
     }

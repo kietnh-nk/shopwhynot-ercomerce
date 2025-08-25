@@ -151,7 +151,8 @@
                                 </h4>
                                 <div class="hstack gap-3 fz-14 flex-wrap">
                                     <div class="brands-detail">
-                                        <span>Thương hiệu: </span> <span class="fw-medium text-info">{{ $product->brands->name }}</span>
+                                        <span>Thương hiệu: </span> <span
+                                            class="fw-medium text-info">{{ $product->brands->name }}</span>
                                     </div>
                                     <div class="vr" style="width: 0.5px !important;"></div>
                                     <div class="py-2">Đánh giá (<strong>@{{ comment ? comment : 0 }}</strong>)</div>
@@ -300,29 +301,29 @@
                                 </div>
                                 <div class="btn-group-add ">
                                     <div class="hstack gap-3 my-3">
-                                       <div class="w-50">
-    <a href="" class="addToCart" data-id="{{ $product->id }}">
-        <button
-            id="btn-add-to-cart"
-            class="animated-button fz-18 rounded-2 fw-medium shadow-sm w-100"
-            data-bs-toggle="tooltip" data-bs-title="Thêm vào giỏ hàng"
-            data-id="{{ $product->id }}">
-            <span>
-                <i class="fa-solid fa-cart-plus fz-20 me-2"></i>
-                <p class="d-none d-md-inline-block mb-0">Thêm vào</p> giỏ hàng
-            </span>
-            <span></span>
-        </button>
-    </a>
-</div>
+                                        <div class="w-50">
+                                            <a href="" class="addToCart" data-id="{{ $product->id }}">
+                                                <button id="btn-add-to-cart"
+                                                    class="animated-button fz-18 rounded-2 fw-medium shadow-sm w-100"
+                                                    data-bs-toggle="tooltip" data-bs-title="Thêm vào giỏ hàng"
+                                                    data-id="{{ $product->id }}">
+                                                    <span>
+                                                        <i class="fa-solid fa-cart-plus fz-20 me-2"></i>
+                                                        <p class="d-none d-md-inline-block mb-0">Thêm vào giỏ hàng</p>
+                                                    </span>
+                                                    <span></span>
+                                                </button>
+                                            </a>
+                                        </div>
 
                                         <div class="w-50 ms-auto">
                                             <a id="btn-buy-now" href="{{ route('cart.index') }}"
-   class="animated-button-success fw-medium fz-18 w-100 rounded-2 shadow-sm addToCart buyNow"
-   data-id="{{ $product->id }}">
-    <i class="fa-solid fa-cart-shopping me-2"></i>Mua Ngay
-    <p class="fz-14 fw-normal mb-0 d-none d-md-inline-block">Giao hàng tận nơi hoặc nhận tại cửa hàng</p>
-</a>
+                                                class="animated-button-success fw-medium fz-18 w-100 rounded-2 shadow-sm addToCart buyNow"
+                                                data-id="{{ $product->id }}">
+                                                <i class="fa-solid fa-cart-shopping me-2"></i>Mua Ngay
+                                                <p class="fz-14 fw-normal mb-0 d-none d-md-inline-block">Giao hàng tận nơi
+                                                    hoặc nhận tại cửa hàng</p>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -455,17 +456,17 @@
                                                 <div class="hstack gap-2">
                                                     <div class="item-two">
                                                         <div class="rating">
-                                                            <label style="margin-right: 5px" for="rating-select">Chọn số sao: </label>
+                                                            <label style="margin-right: 5px" for="rating-select">Chọn số
+                                                                sao: </label>
 
 
-                                                                <style>
-                                                                    #rating-select {
-                                                                        
-                                                                    }
-                                                                </style>
-                                                            
-                                                            <select style="padding: 2px;" id="rating-select" v-model="create.publish">
-                                                                
+                                                            <style>
+                                                                #rating-select {}
+                                                            </style>
+
+                                                            <select style="padding: 2px;" id="rating-select"
+                                                                v-model="create.publish">
+
                                                                 <option style="color: gold; font-size: 20px;"
                                                                     value="1">
                                                                     &#9733;</option>
@@ -911,8 +912,8 @@
         // truyền sản phẩm lên để lấy giá -> tính discount
         let product = @json($product);
     </script>
-    
-    
+
+
 @endsection
 @section('js')
     <script>
@@ -1022,7 +1023,7 @@
                             if (res.data.status) {
                                 alert(res.data.message);
                                 this.LoadBinhLuan();
-                            } 
+                            }
                         })
                         .catch((res) => {
                             $.each(res.response.data.errors, function(k, v) {

@@ -35,7 +35,7 @@ class Promotion extends Model
         'discount' => 'decimal:2',
         'minimum_amount' => 'decimal:2',
         'usage_limit' => 'integer',
-        'quantity' => 'integer',
+        // 'quantity' => 'integer',
     ];
     public function products()
 {
