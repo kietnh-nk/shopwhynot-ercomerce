@@ -74,6 +74,9 @@ class ProductService implements ProductServiceInterface
     {
         DB::beginTransaction();
         try {
+            // Validate dữ liệu trước khi tạo
+            $this->validateProductData($request);
+            
             $product = $this->createProduct($request);
 
             // Trường hợp không có phiên bản
@@ -90,8 +93,8 @@ class ProductService implements ProductServiceInterface
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            \Log::error('Lỗi tạo sản phẩm: ' . $e->getMessage());
+            throw new \Exception('Có lỗi xảy ra khi tạo sản phẩm: ' . $e->getMessage());
         }
     }
     public function update($slug, $request)
@@ -503,5 +506,88 @@ class ProductService implements ProductServiceInterface
             'variant',  // json
             'publish',
         ];
+    }
+
+    /**
+     * Validate dữ liệu sản phẩm trước khi tạo
+     */
+    private function validateProductData($request)
+    {
+        // Kiểm tra brand_id có tồn tại không
+        if ($request->brand_id) {
+            $brand = \App\Models\Brand::find($request->brand_id);
+            if (!$brand) {
+                throw new \Exception('Thương hiệu không tồn tại');
+            }
+        }
+
+        // Kiểm tra product_catalogue_id có tồn tại không
+        if ($request->product_catalogue_id) {
+            $catalogues = \App\Models\ProductCatalogue::whereIn('id', $request->product_catalogue_id)->get();
+            if ($catalogues->count() != count($request->product_catalogue_id)) {
+                throw new \Exception('Một số danh mục sản phẩm không tồn tại');
+            }
+        }
+
+        // Kiểm tra SKU trùng lặp
+        if ($request->sku) {
+            $existingSku = \App\Models\Product::where('sku', $request->sku)->first();
+            if ($existingSku) {
+                throw new \Exception('SKU đã tồn tại trong hệ thống');
+            }
+        }
+
+        // Kiểm tra slug trùng lặp
+        if ($request->slug) {
+            $existingSlug = \App\Models\Product::where('slug', $request->slug)->first();
+            if ($existingSlug) {
+                throw new \Exception('Slug đã tồn tại trong hệ thống');
+            }
+        }
+
+        // Validate variant data nếu có
+        if (isset($request->variant['sku']) && count($request->variant['sku']) > 0) {
+            $this->validateVariantData($request);
+        }
+    }
+
+    /**
+     * Validate dữ liệu variant
+     */
+    private function validateVariantData($request)
+    {
+        $variantSkus = $request->variant['sku'];
+        $variantPrices = $request->variant['price'] ?? [];
+        $variantQuantities = $request->variant['quantity'] ?? [];
+
+        // Kiểm tra SKU variant trùng lặp
+        $duplicateSkus = array_filter(array_count_values($variantSkus), function($count) {
+            return $count > 1;
+        });
+
+        if (!empty($duplicateSkus)) {
+            throw new \Exception('Có SKU variant bị trùng lặp');
+        }
+
+        // Kiểm tra SKU variant đã tồn tại trong database
+        $existingVariantSkus = \App\Models\ProductVariant::whereIn('sku', $variantSkus)->pluck('sku')->toArray();
+        if (!empty($existingVariantSkus)) {
+            throw new \Exception('Một số SKU variant đã tồn tại trong hệ thống');
+        }
+
+        // Kiểm tra giá và số lượng
+        foreach ($variantSkus as $key => $sku) {
+            if (empty($sku)) {
+                throw new \Exception('SKU variant không được để trống');
+            }
+
+            if (isset($variantPrices[$key]) && (!is_numeric($variantPrices[$key]) || $variantPrices[$key] < 0)) {
+                throw new \Exception('Giá variant phải là số và lớn hơn 0');
+            }
+
+            if (isset($variantQuantities[$key]) && (!is_numeric($variantQuantities[$key]) || $variantQuantities[$key] < 0)) {
+                throw new \Exception('Số lượng variant phải là số và lớn hơn 0');
+            }
+        }
     }
 }
