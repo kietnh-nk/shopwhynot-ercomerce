@@ -14,7 +14,7 @@
                                 </ol>
                             </div>
                         </div>
-                        
+
                         <div class="card-body">
                             <div class="listjs-table" id="customerList">
                                 @include('backend.product.product.component.filter')

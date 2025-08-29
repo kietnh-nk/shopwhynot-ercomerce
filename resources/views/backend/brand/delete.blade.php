@@ -22,15 +22,14 @@
                         <div class="card-body">
                             <div class="align-items-center">
                                 <h5>Lưu ý:(<span class="text-danger fz-18">*</span>)</h5>
-                                <span style="line-height: 1.4rem">Dữ liệu quan trọng hãy xem cẩn thận trước khi xóa và
-                                    cân nhắc kỹ trước khi xóa!<p class="fst-italic">Nếu bạn đã chắc chắn muốn
+                                <span style="line-height: 1.4rem">Dữ liệu quan trọng hãy xem cẩn thận trước khi xóa và cân nhắc kỹ trước khi xóa!<p class="fst-italic">Nếu bạn đã chắc chắn muốn
                                         hãy thực hiện thao tác ngay dưới.</p> </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" >
                 <div class="col-lg-5">
                     <div class="card" style="height: 125px">
                         <div class="card-body">
@@ -38,8 +37,7 @@
                                 <h5>Thông tin</h5>
                                 <div class="pt-3 pb-3">
                                     <span style="line-height: 1.4rem">Thông tin bạn đang muốn xóa là<span
-                                            class="text-danger fw-bold fz-14"> {{ $brand->name }}</span> Không thể khôi
-                                        phục!</span>
+                                            class="text-danger fw-bold fz-14"> {{ $brand->name }}.</span> Không thể khôi phục!</span>
                                 </div>
                             </div>
                         </div>
