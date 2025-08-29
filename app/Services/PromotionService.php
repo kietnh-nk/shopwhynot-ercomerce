@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class PromotionService
 {
@@ -70,8 +69,8 @@ class PromotionService
         $validator = Validator::make($data, [
             'name' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Giới hạn kích thước ảnh
-            'description' => 'nullable|string',
+            'image' => 'required',
+            'description' => 'required',
             'end_date' => 'required|date|after:start_date',
             'discount' => 'required_unless:apply_for,freeship|numeric|min:0',
             'minimum_amount' => 'nullable|numeric|min:0',
@@ -133,14 +132,8 @@ class PromotionService
             'usage_limit' => 'nullable|integer|min:0',
             'apply_for' => 'required|in:specific_products,freeship,all',
             'status' => 'required|in:active,inactive',
-            'product_id' => [
-                Rule::requiredIf(function () use ($data) {
-                    return ($data['apply_for'] ?? null) === 'specific_products';
-                }),
-                'nullable',
-                'integer',
-                'exists:products,id',
-            ],
+            'product_id' => 'nullable|required_if:apply_for,specific_products|exists:products,id|not_in:null',
+
         ]);
 
         if ($validator->fails()) {
@@ -149,7 +142,7 @@ class PromotionService
 
         $promotion->update([
             'name' => $data['name'],
-            'image' => $data['image'] ?? $promotion->image, // tránh lỗi khi thiếu image
+            'image' => $data['image'], 
             'start_date' => $data['start_date'],
             'end_date' => $data['end_date'],
             'discount' => $data['discount'],
@@ -173,7 +166,6 @@ class PromotionService
 
         return $promotion;
     }
-
 
     public function deletePromotion($id)
     {
@@ -203,28 +195,28 @@ class PromotionService
     public function receivePromotion(Promotion $promotion)
     {
         $user = Auth::user();
-
+    
         if (!$user) {
             return ['type' => 'error', 'text' => 'Bạn cần đăng nhập để nhận voucher.'];
         }
-
+    
         // Kiểm tra giới hạn sử dụng của voucher
         if ($promotion->usage_limit <= 0) {
             return ['type' => 'error', 'text' => 'Voucher đã hết.'];
         }
-
+    
         // Kiểm tra nếu người dùng đã nhận voucher này
         $existingVoucher = UserVoucher::where('user_id', $user->id)
-            ->where('promotion_id', $promotion->id)
-            ->first();
-
+                                      ->where('promotion_id', $promotion->id)
+                                      ->first();
+    
         if ($existingVoucher) {
             return ['type' => 'error', 'text' => 'Bạn đã nhận voucher này rồi.'];
         }
-
+    
         // Giảm số lượng voucher và tạo bản ghi mới cho người dùng
         $promotion->decrement('usage_limit');
-
+    
         UserVoucher::create([
             'user_id' => $user->id,
             'promotion_id' => $promotion->id,
@@ -232,10 +224,10 @@ class PromotionService
             'received_at' => now(),
             'isUsed' => 1,
         ]);
-
+    
         return ['type' => 'success', 'text' => 'Voucher nhận thành công'];
     }
-
+    
 
     public function getUserPromotions()
     {

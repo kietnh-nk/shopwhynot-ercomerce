@@ -86,6 +86,12 @@ class BrandController extends Controller
             flash()->warning('Nhóm thương hiệu chưa được xóa!');
             return redirect()->route('brand.index');
         } else {
+            $brand = $this->brandRepository->findById($id);
+            //kiểm tra xem bản ghi đó có các bản ghi liên quan trong bảng attributes kh
+            // if ($brand->attributes()->exists()) {
+            //     flash()->warning('Nhóm thuộc tính có các record bên trong không thể xóa!');
+            //     return redirect()->back();
+            // }
             $result = $this->brandService->destroy($id);
             if ($result) {
                 flash()->success('Thương hiệu đã được xóa thành công!');

@@ -263,8 +263,6 @@
                             </div>
                         </div>
 
-                        {{-- Chức năng auto miễn phí vận chuyển khi đơn trên 300k --}}
-
                         <div class="col-lg-4 col-md-12 col-12 pe-0 ps-3">
                             <div class="card border-0 rounded-2 shadow-sm">
                                 <div class="card-header border-0 py-3">
@@ -337,90 +335,47 @@
                                                         @endphp
                                                     @endforeach
                                                 @endif
-
-                                                @php
-                                                    $freeShippingThreshold = 300000; // 300k VND
-                                                    $isAutoFreeShipping = $total >= $freeShippingThreshold;
-                                                @endphp
-
                                                 <tr style="height: 10px;">
                                                     <td colspan="3">
                                                         <hr>
                                                     </td>
                                                 </tr>
-
-                                                {{-- NEW: Show free shipping status --}}
-                                                @if ($isAutoFreeShipping)
-                                                    <tr>
-                                                        <td colspan="3">
-                                                            <div class="alert alert-success py-2 mb-2 fz-14">
-                                                                <i class="fa-solid fa-truck me-2"></i>
-                                                                <strong>Miễn phí vận chuyển!</strong> Đơn hàng của bạn đã đủ điều kiện miễn phí ship.
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endif
-
-                                                {{-- Applied promotions and auto benefits section --}}
-                                                @if (session('promotions') || session()->get('auto_free_shipping', false) || $isAutoFreeShipping)
+                                                @if (session('promotions'))
                                                     <tr style="height: 37px">
                                                         <td colspan="3">
-                                                            <span class="fw-medium">Ưu đãi đã áp dụng:</span>
+                                                            <span class="fw-medium">Mã giảm giá đã áp dụng:</span>
                                                         </td>
                                                     </tr>
-                                                    
-                                                    {{-- Show auto free shipping if applicable --}}
-                                                    @if (session()->get('auto_free_shipping', false) || $isAutoFreeShipping)
+                                                    @foreach (session('promotions') as $promotion)
                                                         <tr style="height: 37px">
                                                             <td colspan="2" class="">
                                                                 <div class="d-flex align-items-center">
-                                                                    <i class="fa-solid fa-truck text-success me-2"></i>
-                                                                    <span class="text-success fw-medium">
-                                                                        Miễn phí vận chuyển (Đơn hàng ≥300k)
+                                                                    <i class="fa-solid fa-ticket text-success me-2"></i>
+                                                                    <span class="text-success fw-medium text-truncate">
+                                                                        {{ $promotion['code'] }}
                                                                     </span>
                                                                 </div>
                                                             </td>
                                                             <td class="text-end">
-                                                                <span class="badge bg-success-subtle text-success fz-12">Tự động</span>
+                                                                <form
+                                                                    action="{{ route('cart.removeVoucher', $promotion['code']) }}"
+                                                                    method="POST" class="m-0">
+                                                                    @csrf
+                                                                    <button type="submit"
+                                                                        class="btn btn-outline-danger btn-sm border-0" data-bs-toggle="tooltip"
+                                                                        data-bs-title="Xóa mã giảm giá {{ $promotion['code'] }}">
+                                                                        <i class="fa fa-trash me-1"></i>
+                                                                    </button>
+                                                                </form>
                                                             </td>
                                                         </tr>
-                                                    @endif
-                                                    
-                                                    {{-- Show applied promotion codes --}}
-                                                    @if (session('promotions'))
-                                                        @foreach (session('promotions') as $promotion)
-                                                            <tr style="height: 37px">
-                                                                <td colspan="2" class="">
-                                                                    <div class="d-flex align-items-center">
-                                                                        <i class="fa-solid fa-ticket text-success me-2"></i>
-                                                                        <span class="text-success fw-medium text-truncate">
-                                                                            {{ $promotion['code'] }}
-                                                                        </span>
-                                                                    </div>
-                                                                </td>
-                                                                <td class="text-end">
-                                                                    <form
-                                                                        action="{{ route('cart.removeVoucher', $promotion['code']) }}"
-                                                                        method="POST" class="m-0">
-                                                                        @csrf
-                                                                        <button type="submit"
-                                                                            class="btn btn-outline-danger btn-sm border-0" data-bs-toggle="tooltip"
-                                                                            data-bs-title="Xóa mã giảm giá {{ $promotion['code'] }}">
-                                                                            <i class="fa fa-trash me-1"></i>
-                                                                        </button>
-                                                                    </form>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @endif
-                                                    
+                                                    @endforeach
                                                     <tr style="height: 10px">
                                                         <td colspan="3">
                                                             <hr>
                                                         </td>
                                                     </tr>
                                                 @endif
-
                                                 <tr style="height: 50px;">
                                                     <td class=" text-start fz-16" colspan="2">Thành tiền:</td>
                                                     <td class="fw-semibold text-end" id="cart-price">
@@ -440,19 +395,8 @@
                                                 <tr style="height: 60px;">
                                                     <td class=" text-start fz-16" colspan="2">Phí vận chuyển:</td>
                                                     <td class="fw-semibold text-end" id="shopping_fee">
-                                                        @php
-                                                            // Check if free shipping applies (either auto or voucher)
-                                                            $hasFreeShipping = session()->has('shipping_fee') && session('shipping_fee') == 0;
-                                                            $hasAutoFreeShipping = session()->get('auto_free_shipping', false);
-                                                        @endphp
-                                                        
-                                                        @if ($hasFreeShipping || $hasAutoFreeShipping || $isAutoFreeShipping)
-                                                            <span class="text-success fw-medium">
-                                                                Miễn phí
-                                                                @if ($isAutoFreeShipping && !$hasAutoFreeShipping)
-                                                                    <small class="text-muted d-block fz-12">(≥300k)</small>
-                                                                @endif
-                                                            </span>
+                                                        @if (session()->has('shipping_fee') && session('shipping_fee') == 0)
+                                                            <span class="text-success">Miễn phí</span>
                                                         @else
                                                             25.000đ
                                                         @endif
@@ -465,20 +409,11 @@
                                                         <span class="fw-semibold" id="cart-total-price">
                                                             @php
                                                                 $totalPrice = $total;
-                                                                
-                                                                // Determine shipping fee
-                                                                $shippingFee = 25000; // Default shipping fee
-                                                                
-                                                                // Check various free shipping conditions
-                                                                if ($isAutoFreeShipping || 
-                                                                    session()->get('auto_free_shipping', false) || 
-                                                                    (session()->has('shipping_fee') && session('shipping_fee') == 0)) {
-                                                                    $shippingFee = 0;
-                                                                }
-                                                                
+                                                                $shippingFee = session()->has('shipping_fee')
+                                                                    ? session('shipping_fee')
+                                                                    : 25000;
                                                                 $totalPriceWithShipping = $totalPrice + $shippingFee;
-                                                                
-                                                                // Apply total discount from all promotions
+                                                                // Áp dụng tổng số tiền giảm giá từ tất cả mã đã áp dụng
                                                                 $totalDiscount = session()->get('total_discount', 0);
                                                                 $totalPriceWithShipping -= $totalDiscount;
                                                             @endphp
@@ -501,6 +436,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        
                         
                     </div>
                 </form>

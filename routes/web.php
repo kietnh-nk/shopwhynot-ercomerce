@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-//FRONTEND 
+//FONTEND 
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
 Route::get('shop', [ShopController::class, 'index'])->name('shop.index');
@@ -85,7 +85,7 @@ Route::group(['prefix' => 'post'], function () {
     Route::get('detail/{slug}', [FontendPostController::class, 'detail'])->name('post.detail');
 });
 
-// FRONTEND REQUIRED LOGIN
+// FONTEND REQUIRED LOGIN
 Route::middleware(['auth'])->group(function () {
 
     // PROFILE USER

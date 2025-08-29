@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="vn">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @include('backend.dashboard.components.head')
 </head>
 
