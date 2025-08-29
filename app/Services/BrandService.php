@@ -75,7 +75,7 @@ class BrandService implements BrandServiceInterface
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e->getMessage();
-            die();
+            //die();
             return false;
         }
     }

@@ -22,9 +22,9 @@ Giới thiệu
                     <h4 class="p-2 p-3">Giới Thiệu</h4>
 
                     <p class="p-2 pb-5 px-5 w-75 text-center w-100" style="text-align: center;">
-                        Chào mừng bạn đến với WhyNotShop, nơi thời trang không chỉ đơn
+                        Chào mừng bạn đến với BeeCloudy, nơi thời trang không chỉ đơn
                         thuần là quần áo, mà còn là sự thể hiện bản thân và phong cách
-                        sống. Tại WhyNotShop, chúng tôi tin rằng mỗi người đều có một câu
+                        sống. Tại BeeCloudy, chúng tôi tin rằng mỗi người đều có một câu
                         chuyện riêng và trang phục mà bạn chọn là một phần quan trọng trong
                         việc kể câu chuyện đó. Chúng tôi cam kết cung cấp những sản phẩm thời
                         trang tinh tế, sáng tạo, và hiện đại, giúp bạn tỏa sáng trong bất kỳ hoàn
@@ -94,13 +94,13 @@ Giới thiệu
                     <div class="row p-3">
                         <div class="col-12">
                             <p class="text-start">
-                                <strong>WhyNotShop</strong> không chỉ là một cửa hàng trực tuyến, mà còn là một cộng đồng dành cho những
+                                <strong>BeeCloudy</strong> không chỉ là một cửa hàng trực tuyến, mà còn là một cộng đồng dành cho những
                                 người yêu thích thời trang. Chúng tôi thường xuyên cập nhật các bài viết blog, chia sẻ
                                 mẹo phối đồ và xu hướng thời trang mới nhất để giúp bạn trở thành phiên bản tốt nhất của
                                 chính mình.
                                 <br>
                                 <br>
-                                Hãy gia nhập cộng đồng WhyNotShop và cùng chúng tôi khám phá thế giới thời trang đa sắc
+                                Hãy gia nhập cộng đồng BeeCloudy và cùng chúng tôi khám phá thế giới thời trang đa sắc
                                 màu. Chúng tôi rất hân hạnh được đồng hành cùng bạn trên hành trình tìm kiếm phong cách
                                 riêng của mình!
                             </p>

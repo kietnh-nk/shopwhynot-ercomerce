@@ -240,7 +240,7 @@
                                             class="text-decoration-none fz-16 text-color">Giới thiệu</a>
                                     </li>
                                     <li class="li-menu-header">
-                                        <a href="#"
+                                        <a href="{{ route('promotion.home_index') }}"
                                             class="text-decoration-none fz-16 text-color">Khuyến mãi</a>
                                     </li>
                                     <li class="li-menu-header">
@@ -262,7 +262,7 @@
                     <div class="d-flex icon-header align-items-center">
                         <div class="icon-item">
                             <span class="box-icon-profile">
-                                <a href="#" type="button">
+                                <a href="{{ route('wishlist.index') }}" type="button">
                                     <i class="fa-solid fa-bookmark" data-bs-toggle="tooltip"
                                         data-bs-title="Yêu thích"></i>
                                 </a>
@@ -324,7 +324,7 @@
                                             </a>
                                         </li>
                                         <li class="li-menu-header p-2">
-                                            <a href="#"
+                                            <a href="{{ route('wishlist.index') }}"
                                                 class="text-decoration-none fz-13 ps-1 text-muted custom-a">
                                                 <i class="fa-solid fa-bookmark p-0 me-2"></i>Yêu thích
                                             </a>

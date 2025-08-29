@@ -39,29 +39,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// AJAX
-//SEARCH SUGGESTION
-Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'])->name('ajax.search.suggestions');
-// ATTRIBUTE
-Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
-Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
-Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
 
-// AUTH
-Route::get('login', [LoginController::class, 'index'])->name('auth.login');
-Route::post('store-login', [LoginController::class, 'login'])->name('store.login');
-Route::get('register', [RegisterController::class, 'index'])->name('auth.register');
-Route::post('register-store', [RegisterController::class, 'register'])->name('store.register');
-Route::get('/confirm-registration/{token}', [RegisterController::class, 'confirmRegistration'])->name('confirm.registration');
-
-// FRONTEND REQUIRED LOGIN
-Route::middleware(['auth'])->group(function () {
-    //promotion
-    Route::get('/promotion', [FPromotionController::class, 'index'])->name('promotion.home_index');
-    Route::post('/receive/{promotion}', [FPromotionController::class, 'receivePromotion'])->name('promotion.receive');
-});
-
-//FRONTEND
+//FRONTEND 
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
 Route::get('shop', [ShopController::class, 'index'])->name('shop.index');
@@ -83,7 +62,7 @@ Route::get('security_center', [HomeController::class, 'security_center'])->name(
 // AJAX
 //SEARCH SUGGESTION
 Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'])->name('ajax.search.suggestions');
-// ATTRIBUTE
+// ATTRIBUTE 
 Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
 Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
@@ -99,16 +78,84 @@ Route::delete('/ajax/cart/clearCart', [AjaxCartController::class, 'clearCart'])-
 
 // WISHLIST AJAX
 Route::post('/ajax/wishlist/toggle', [AjaxWishlistController::class, 'toggle'])->name('ajax.wishlist.toggle');
+// POST
 Route::group(['prefix' => 'post'], function () {
     Route::get('page', [FontendPostController::class, 'index'])->name('post.page');
     Route::get('category/{id}', [FontendPostController::class, 'postInCategory'])->where(['id' => '[0-9]+'])->name('post.category');
     Route::get('detail/{slug}', [FontendPostController::class, 'detail'])->name('post.detail');
 });
 
-Route::group(['prefix' => 'cart'], function () {
-    Route::get('index', [AjaxCartController::class, 'index'])->name('cart.index');
-    Route::post('/apply-discount', [AjaxCartController::class, 'applyPromotion'])->name('cart.applyDiscount');
-    Route::post('/remove-voucher/{voucherId}', [AjaxCartController::class, 'removeVoucher'])->name('cart.removeVoucher');
+// FRONTEND REQUIRED LOGIN
+Route::middleware(['auth'])->group(function () {
+
+    // PROFILE USER
+    Route::get('/profile', [FontendUserController::class, 'profile'])->name('profile.user');
+    Route::get('/profile/change-pass', [FontendUserController::class, 'changeViewProfile'])->name('profile.change-view');
+    Route::post('/profile/change-pass', [FontendUserController::class, 'changeSubmitProfile'])->name('profile.change-submit');
+    Route::get('/confirm-password-change/{token}', [FontendUserController::class, 'confirmPasswordChange'])->name('confirm.password.change');
+    Route::get('/profile/edit', [FontendUserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/edit', [FontendUserController::class, 'updateProfile'])->name('profile.update');
+
+    // account 
+    Route::group(['prefix' => 'account'], function () {
+        Route::get('info', [FontendUserController::class, 'info'])->name('account.info');
+        Route::get('view_order', [FontendOrderController::class, 'view_order'])->name('account.order');
+        Route::get('view_promotion', [FPromotionController::class, 'view_promotion'])->name('account.promotions');
+        Route::get('/view_promotion/{id}', [FPromotionController::class, 'show'])->name('account.promotion.show');
+        Route::get('order/detail/{id}', [FontendOrderController::class, 'detail'])->where(['id' => '[0-9]+'])->name('account.order.detail');
+    });
+
+    Route::group(['prefix' => 'cart'], function () {
+        Route::get('index', [AjaxCartController::class, 'index'])->name('cart.index');
+        Route::post('/apply-discount', [AjaxCartController::class, 'applyPromotion'])->name('cart.applyDiscount');
+        Route::post('/remove-voucher/{voucherId}', [AjaxCartController::class, 'removeVoucher'])->name('cart.removeVoucher');
+    });
+
+    //promotion
+    Route::get('/promotion', [FPromotionController::class, 'index'])->name('promotion.home_index');
+    Route::post('/receive/{promotion}', [FPromotionController::class, 'receivePromotion'])->name('promotion.receive');
+
+    // ORDER 
+    Route::group(['prefix' => 'order'], function () {
+        Route::get('checkout', [FontendOrderController::class, 'checkout'])->name('order.checkout');
+        Route::post('store', [FontendOrderController::class, 'store'])->name('store.order');
+        Route::get('success', [FontendOrderController::class, 'success'])->name('order.success');
+        Route::get('failed', [FontendOrderController::class, 'failed'])->name('order.failed');
+    });
+    // WISHLIST
+    Route::group(['prefix' => 'wishlist'], function () {
+        Route::get('index', [AjaxWishlistController::class, 'index'])->name('wishlist.index');
+    });
+
+    // PAYMENT VNPAY
+    Route::get('return/vnpay', [VnpayController::class, 'vnpayReturn'])->name('vnpay.return');
+    Route::get('return/vnpay_ipn', [VnpayController::class, 'vnpayIpn'])->name('vnpay.ipn');
+
+    // PAYMENT momo
+    Route::get('return/momo', [MomoController::class, 'momoReturn'])->name('momo.return');
+    Route::get('return/momo_ipn', [MomoController::class, 'momoIpn'])->name('momo.ipn');
+
+    //ĐÁNH GIÁ SẢN PHẨM
+    Route::get('/producreview', [ProductReviewController::class, 'index']);
+    Route::get('/information', [ProductReviewController::class, 'view_order']);
+    Route::get('/producreview-data/{slug}', [ProductReviewController::class, 'data']);
+    Route::post('/producreview/create/{slug}', [ProductReviewController::class, 'create']);
+    Route::post('/producreview/like', [ProductReviewController::class, 'like']);
+    Route::get('/producreview/like-data/{slug}', [ProductReviewController::class, 'likedata']);
+    Route::get('/product/check/{slug}', [ProductReviewController::class, 'checkIfRated']);
+    Route::post('/producreview-delete', [ProductReviewController::class, 'delete']);
+    Route::post('/producreview-update', [ProductReviewController::class, 'update']);
+
+    // BÌNH LUẬN BÀI VIẾT
+    Route::get('/view-content', [ContentController::class, 'view_content']);
+    Route::get('/view-content-data', [ContentController::class, 'data']);
+    Route::post('/view-content-create', [ContentController::class, 'create']);
+    Route::post('/view-content-delete', [ContentController::class, 'delete']);
+    Route::post('/view-content-update', [ContentController::class, 'update']);
+    Route::post('/content/like', [ContentController::class, 'like']);
+    Route::get('/content/like-data', [ContentController::class, 'likedata']);
+    Route::get('/content/check', [ContentController::class, 'checkIfRated']);
+    Route::get('/comments', [ContentController::class, 'loadCommentsPage']);
 });
 
 //BACKEND
@@ -125,7 +172,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [UserCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('user.catalogue.delete');
         Route::delete('destroy/{id}', [UserCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.catalogue.destroy');
     });
-    // users
+
+    // users 
     Route::group(['prefix' => 'user/'], function () {
         Route::get('index', [UserController::class, 'index'])->name('user.index');
         Route::get('create', [UserController::class, 'create'])->name('user.create');
@@ -233,6 +281,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('index', [OrderController::class, 'index'])->name('order.index');
         Route::get('detail/{id}', [OrderController::class, 'detail'])->where(['id' => '[0-9]+'])->name('order.detail');
         Route::post('process_cancele/{id}', [OrderController::class, 'process_cancele'])->where(['id' => '[0-9]+'])->name('order.process_cancele');
+    });
+
     //Banner 
     Route::group(['prefix' => 'banner'], function () {
         Route::get('index', [BannerController::class, 'index'])->name('banner.index');
@@ -243,7 +293,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('delete/{id}', [BannerController::class, 'delete'])->where(['id' => '[0-9]+'])->name('banner.delete');
         Route::delete('destroy/{id}', [BannerController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('banner.destroy');
     });
-         //Doanh thu
+
+    //Doanh thu
     Route::get('/admin/revenue', [RevenueController::class, 'index'])->name('revenue.index');
     Route::post('/admin/thong-ke-data', [RevenueController::class, 'Thongke']);
 
@@ -263,9 +314,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/producreview-data', [ProductReviewController::class, 'getdata']);
     Route::post('/producreview-update-admin', [ProductReviewController::class, 'updateadmin']);
     Route::post('/producreview-delete-admin', [ProductReviewController::class, 'deleteadmin']);
-    });
 });
-
 
 // AUTH
 Route::get('login', [LoginController::class, 'index'])->name('auth.login');
@@ -282,7 +331,14 @@ Route::get('/password/resend-otp', [ForgotPasswordController::class, 'resendOtp'
 Route::get('/password/reset', [ForgotPasswordController::class, 'resetForm'])->name('password.reset');
 Route::post('/password/reset', [ForgotPasswordController::class, 'reset'])->name('password.update');
 
+Route::get('auth/google', [LoginController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+
+Route::get('auth/facebook', [LoginController::class, 'redirectToFacebook'])->name('auth.facebook');
+Route::get('auth/facebook/callback', [LoginController::class, 'handleFacebookCallback'])->name('auth.facebook.callback');
+
 Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+
 //Page 404
 Route::fallback(function () {
     return view('fontend.error.404');

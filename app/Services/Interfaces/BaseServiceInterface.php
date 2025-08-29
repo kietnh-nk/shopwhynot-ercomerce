@@ -5,5 +5,5 @@ namespace App\Services\Interfaces;
  * class BaseServicesInterface
  * @package App\Services\Interfaces
  */
-interface BaseServiceInterface {
+interface BaseServiceinteface {
 }
