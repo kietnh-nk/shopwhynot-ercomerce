@@ -180,7 +180,7 @@
                                         <i class="fa-solid fa-bolt text-info"></i>
                                     </div>
                                     <h4 class="fs-5 fw-bold text-start text-uppercase mb-0 text-white">
-                                        Siêu Sale 
+                                        Siêu Sale
                                     </h4>
                                 </div>
                             </div>
@@ -277,17 +277,17 @@
                                                 <a href="{{ route('cart.index') }}"
                                                     class="action-cart-item-buy addToCart buyNow"
                                                     data-id="{{ $productSupperSale->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
                                                     <span>Mua ngay</span>
                                                 </a>
                                                 <a href="" class="action-cart-item-add addToCart"
                                                     data-id="{{ $productSupperSale->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
                                                     <span>thêm giỏ hàng</span>
                                                 </a>
@@ -476,17 +476,17 @@
                                                 <a href="{{ route('cart.index') }}"
                                                     class="action-cart-item-buy addToCart buyNow"
                                                     data-id="{{ $productN->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
                                                     <span>Mua ngay</span>
                                                 </a>
                                                 <a href="" class="action-cart-item-add addToCart"
                                                     data-id="{{ $productN->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
                                                     <span>thêm giỏ hàng</span>
                                                 </a>
@@ -628,23 +628,43 @@
                                                 </span>
                                             </div>
                                             <div class="box-action">
+                                                @if($variantFirst)
                                                 <a href="{{ route('cart.index') }}"
                                                     class="action-cart-item-buy addToCart buyNow"
                                                     data-id="{{ $productPriceMin->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
                                                     <span>Mua ngay</span>
                                                 </a>
                                                 <a href="" class="action-cart-item-add addToCart"
                                                     data-id="{{ $productPriceMin->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
                                                     <span>thêm giỏ hàng</span>
                                                 </a>
+                                                @else
+                                                <a href="{{ route('cart.index') }}"
+                                                    class="action-cart-item-buy addToCart buyNow"
+                                                    data-id="{{ $productPriceMin->id }}"
+                                                    data-product-variant-id=""
+                                                    data-product-variant-price="{{ $productPriceMin->price }}"
+                                                    data-attributeId="">
+                                                    <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
+                                                    <span>Mua ngay</span>
+                                                </a>
+                                                <a href="" class="action-cart-item-add addToCart"
+                                                    data-id="{{ $productPriceMin->id }}"
+                                                    data-product-variant-id=""
+                                                    data-product-variant-price="{{ $productPriceMin->price }}"
+                                                    data-attributeId="">
+                                                    <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
+                                                    <span>thêm giỏ hàng</span>
+                                                </a>
+                                                @endif
                                             </div>
                                             <div class="head-card d-flex p-1">
                                                 <span class="fz-14 ">
@@ -826,17 +846,17 @@
                                                 <a href="{{ route('cart.index') }}"
                                                     class="action-cart-item-buy addToCart buyNow"
                                                     data-id="{{ $productSale->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
                                                     <span>Mua ngay</span>
                                                 </a>
                                                 <a href="" class="action-cart-item-add addToCart"
                                                     data-id="{{ $productSale->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
                                                     <span>thêm giỏ hàng</span>
                                                 </a>
