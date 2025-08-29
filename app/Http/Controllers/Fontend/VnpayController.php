@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Fontend;
 
 use Exception;
-;
-use Illuminate\Http\Request;
 use App\Classes\Vnpay;
+use Illuminate\Http\Request;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\OrderRepository;
