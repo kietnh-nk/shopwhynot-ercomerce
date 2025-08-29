@@ -23,9 +23,8 @@
                     </div>
                     <div class="modal-footer">
                         <form id="bulk-delete-form"
-                            method="POST">
+                            action="{{ route('attribute.catalogue.destroy-multiple') }}" method="POST">
                             @csrf
-                            @method('DELETE')
                             <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Hủy</button>
                             <input type="hidden" name="array_id" id="checked_array_id" value="">
                             <button type="submit" class="btn btn-success">Xác nhận xóa</button>

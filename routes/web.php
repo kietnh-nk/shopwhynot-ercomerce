@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-//FRONTEND 
+//FRONTEND
 Route::get('/', [HomeController::class, 'index'])->name('home_index.index');
 Route::get('home', [HomeController::class, 'index'])->name('home.index');
 Route::get('shop', [ShopController::class, 'index'])->name('shop.index');
@@ -62,7 +62,7 @@ Route::get('security_center', [HomeController::class, 'security_center'])->name(
 // AJAX
 //SEARCH SUGGESTION
 Route::get('/ajax/search/suggestion', [AjaxSearchController::class, 'suggestion'])->name('ajax.search.suggestions');
-// ATTRIBUTE 
+// ATTRIBUTE
 Route::get('/ajax/attribute/getAttribute', [AjaxAttributeController::class, 'getAttribute'])->name('ajax.attribute.getAttribute');
 Route::get('/ajax/attribute/loadAttribute', [AjaxAttributeController::class, 'loadAttribute'])->name('ajax.attribute.loadAttribute');
 Route::get('ajax/product/loadVariant', [AjaxProductController::class, 'loadVariant'])->name('ajax.loadVariant');
@@ -96,7 +96,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [FontendUserController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile/edit', [FontendUserController::class, 'updateProfile'])->name('profile.update');
 
-    // account 
+    // account
     Route::group(['prefix' => 'account'], function () {
         Route::get('info', [FontendUserController::class, 'info'])->name('account.info');
         Route::get('view_order', [FontendOrderController::class, 'view_order'])->name('account.order');
@@ -115,7 +115,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/promotion', [FPromotionController::class, 'index'])->name('promotion.home_index');
     Route::post('/receive/{promotion}', [FPromotionController::class, 'receivePromotion'])->name('promotion.receive');
 
-    // ORDER 
+    // ORDER
     Route::group(['prefix' => 'order'], function () {
         Route::get('checkout', [FontendOrderController::class, 'checkout'])->name('order.checkout');
         Route::post('store', [FontendOrderController::class, 'store'])->name('store.order');
@@ -173,7 +173,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::delete('destroy/{id}', [UserCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('user.catalogue.destroy');
     });
 
-    // users 
+    // users
     Route::group(['prefix' => 'user/'], function () {
         Route::get('index', [UserController::class, 'index'])->name('user.index');
         Route::get('create', [UserController::class, 'create'])->name('user.create');
@@ -194,6 +194,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('edit/{slug}', [AttributeCatalogueController::class, 'edit'])->name('attribute.catalogue.edit');
         Route::get('delete/{id}', [AttributeCatalogueController::class, 'delete'])->where(['id' => '[0-9]+'])->name('attribute.catalogue.delete');
         Route::delete('destroy/{id}', [AttributeCatalogueController::class, 'destroy'])->where(['id' => '[0-9]+'])->name('attribute.catalogue.destroy');
+        Route::post('destroy-multiple', [AttributeCatalogueController::class, 'destroyMultiple'])->name('attribute.catalogue.destroy-multiple');
     });
 
     // attribute
@@ -283,7 +284,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('process_cancele/{id}', [OrderController::class, 'process_cancele'])->where(['id' => '[0-9]+'])->name('order.process_cancele');
     });
 
-    //Banner 
+    //Banner
     Route::group(['prefix' => 'banner'], function () {
         Route::get('index', [BannerController::class, 'index'])->name('banner.index');
         Route::get('create', [BannerController::class, 'create'])->name('banner.create');

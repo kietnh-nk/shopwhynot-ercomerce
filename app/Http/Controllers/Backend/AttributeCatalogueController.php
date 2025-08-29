@@ -41,7 +41,7 @@ class AttributeCatalogueController extends Controller
     }
     public function store(StoreAttributeCatalogueRequest $request)
     {
-        // gọi tới service với phương thức create 
+        // gọi tới service với phương thức create
         $result = $this->attributeCatalogueService->create($request);
         if ($result) {
             flash()->success('Thêm mới thành công');
@@ -54,6 +54,12 @@ class AttributeCatalogueController extends Controller
     public function update($slug)
     {
         $attributeCatalogue = $this->attributeCatalogueRepository->findBySlug($slug);
+
+        if (!$attributeCatalogue) {
+            flash()->error('Không tìm thấy nhóm thuộc tính!');
+            return redirect()->route('attribute.catalogue.index');
+        }
+
         // lấy ra tất cả vs điều kiện (không lấy ra bản ghi đàn được find)
         $attributeCatalogues = $this->attributeCatalogueRepository->allWhere([
             ['slug', '!=', $attributeCatalogue->slug]
@@ -85,9 +91,9 @@ class AttributeCatalogueController extends Controller
             'attributeCatalogue',
         ));
     }
-    public function destroy($id = 0)
+    public function destroy($id = 0, Request $request)
     {
-        if ($_POST['submit'] == 'cancel') {
+        if ($request->input('submit') == 'cancel') {
             flash()->warning('Nhóm thuộc tính chưa được xóa!');
             return redirect()->route('attribute.catalogue.index');
         } else {
@@ -116,9 +122,22 @@ class AttributeCatalogueController extends Controller
         // Kiểm tra nếu có ID, và tách chuỗi thành mảng
         if ($listId) {
             $arrayId = explode(',', $listId);
-            dd($arrayId);
-            $this->attributeCatalogueService->destroyBulk($arrayId);
-            flash()->success('Xóa thành công các bản ghi.');
+            $result = $this->attributeCatalogueService->destroyBulk($arrayId);
+
+            if ($result && $result['success']) {
+                $deletedCount = count($result['deleted']);
+                $notDeletedCount = count($result['not_deleted']);
+
+                if ($deletedCount > 0) {
+                    flash()->success("Đã xóa thành công {$deletedCount} bản ghi.");
+                }
+
+                if ($notDeletedCount > 0) {
+                    flash()->warning("Không thể xóa {$notDeletedCount} bản ghi vì có liên kết với thuộc tính.");
+                }
+            } else {
+                flash()->error('Có lỗi khi xóa, vui lòng thử lại!');
+            }
         } else {
             flash()->warning('Không có bản ghi nào được chọn để xóa.');
         }

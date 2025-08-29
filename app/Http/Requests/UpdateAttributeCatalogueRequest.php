@@ -21,10 +21,11 @@ class UpdateAttributeCatalogueRequest extends FormRequest
      */
     public function rules(): array
     {
+        $slug = $this->route('slug'); // Lấy slug từ route parameter
+
         return [
             'name' => 'required|max:255',
-            'slug' => 'required|string|max:255',
-
+            'slug' => 'required|string|max:255|unique:attribute_catalogues,slug,' . $slug . ',slug',
         ];
     }
     public function messages(): array

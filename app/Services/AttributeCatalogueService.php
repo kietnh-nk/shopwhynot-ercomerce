@@ -8,6 +8,7 @@ use App\Services\Interfaces\AttributeCatalogueServiceInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * interface  UserService
@@ -33,7 +34,7 @@ class AttributeCatalogueService implements AttributeCatalogueServiceInterface
             'keyword' => addslashes($request->input('keyword')),
             'publish' => $request->input('publish') !== null ? $request->integer('publish') : null,
         ];
-        $perPage = $request->integer('perpage') ?: 5; // mặc định mỗi trang 5 sp 
+        $perPage = $request->integer('perpage') ?: 5; // mặc định mỗi trang 5 sp
 
         $attributeCatalogues = $this->attributeCatalogueRepository->pagination(
             $this->selectColumn(),
@@ -48,16 +49,17 @@ class AttributeCatalogueService implements AttributeCatalogueServiceInterface
     {
         // mở lệnh tương tác vs db
         DB::beginTransaction();
-        // dùng try-catch để bắt lỗi 
+        // dùng try-catch để bắt lỗi
         try {
             $payload = $request->except(['_submit']);
+            $payload['slug'] = Str::slug($payload['slug'], '-');
             // thực hiện thêm mới -> gọi tới repository nhận vào một payload
             $attributeCatalogue = $this->attributeCatalogueRepository->create($payload);
             DB::commit(); // nếu k có lỗi -> commit lên đb
             return true;
         } catch (\Exception $e) {
-            DB::rollBack(); // có lỗi -> rollback lại k commit 
-            echo $e->getMessage(); // hiển thị lỗi 
+            DB::rollBack(); // có lỗi -> rollback lại k commit
+            echo $e->getMessage(); // hiển thị lỗi
             return false;
         }
     }
@@ -70,6 +72,7 @@ class AttributeCatalogueService implements AttributeCatalogueServiceInterface
                 throw new \Exception("Không tìm thấy bản ghi!");
             }
             $payload = $request->except(['_token', 'submit']);
+            $payload['slug'] = Str::slug($payload['slug'], '-');
             // dd($payload);
             $data = $this->attributeCatalogueRepository->update($slug, $payload);
             DB::commit();
@@ -77,7 +80,7 @@ class AttributeCatalogueService implements AttributeCatalogueServiceInterface
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e->getMessage();
-           // die();
+            // die();
             return false;
         }
     }
@@ -99,21 +102,14 @@ class AttributeCatalogueService implements AttributeCatalogueServiceInterface
     {
         DB::beginTransaction();
         try {
-            // Kiểm tra quyền trước khi xóa (phải là admin)
-            if (Auth::user()->user_catalogue_id != 2) {
-                flash()->warning('Bạn không đủ quyền thực hiện thao tác!');
-                return redirect()->back();
-            }
-    
             $arrayIdNotSatisfied = []; // k thỏa mãn
             $arrayIdSatisfied = []; // thỏa mãn
-    
-            // Duyệt qua từng ID trong mảng
-            if(count($arrayId)){
 
+            // Duyệt qua từng ID trong mảng
+            if (count($arrayId)) {
                 foreach ($arrayId as $id) {
                     $attributeCatalogue = $this->attributeCatalogueRepository->findById($id);
-        
+
                     // Kiểm tra nếu có liên kết trong bảng `attributes`
                     if ($attributeCatalogue->attributes()->exists()) {
                         // Thêm vào danh sách bản ghi không thỏa mãn điều kiện xóa
@@ -124,18 +120,19 @@ class AttributeCatalogueService implements AttributeCatalogueServiceInterface
                     }
                 }
             }
-            // Kiểm tra nếu có bản ghi không thỏa mãn
-            if (!empty($arrayIdNotSatisfied)) {
-                flash()->warning('Không thể xóa các bản ghi sau vì có liên kết: ' . implode(', ', $arrayIdNotSatisfied));
-                return redirect()->back();
-            }
+
             // Nếu tất cả các bản ghi đều thỏa mãn, thực hiện xóa
             if (!empty($arrayIdSatisfied)) {
                 $this->attributeCatalogueRepository->bulkDelete($arrayIdSatisfied);
             }
+
             DB::commit();
-            return true;
-    
+            return [
+                'success' => true,
+                'deleted' => $arrayIdSatisfied,
+                'not_deleted' => $arrayIdNotSatisfied
+            ];
+
         } catch (\Exception $e) {
             DB::rollBack();
             echo $e->getMessage();
