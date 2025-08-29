@@ -360,17 +360,17 @@
                                                 <a href="{{ route('cart.index') }}"
                                                     class="action-cart-item-buy addToCart buyNow"
                                                     data-id="{{ $productNew->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-shopping fz-18 me-2"></i>
                                                     <span>Mua ngay</span>
                                                 </a>
                                                 <a href="" class="action-cart-item-add addToCart"
                                                     data-id="{{ $productNew->id }}"
-                                                    data-product-variant-id="{{ $variantFirst->id }}"
-                                                    data-product-variant-price="{{ $variantFirst->price }}"
-                                                    data-attributeId="{{ @json_encode($variantFirst->code) }}">
+                                                    data-product-variant-id="{{ $variantFirst ? $variantFirst->id : '' }}"
+                                                    data-product-variant-price="{{ $variantFirst ? $variantFirst->price : $productPriceMin->price }}"
+                                                    data-attributeId="{{ $variantFirst ? @json_encode($variantFirst->code) : '' }}">
                                                     <i class="fa-solid fa-cart-plus fz-18 me-2"></i>
                                                     <span>thêm giỏ hàng</span>
                                                 </a>
