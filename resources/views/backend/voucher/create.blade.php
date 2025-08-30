@@ -90,8 +90,7 @@
 
                                 <!-- Số tiền tối thiểu -->
                                 <div class="mb-3">
-                                    <label class="form-label">Số tiền tối thiểu:<span
-                                            class="text-danger fz-18">*</span></label>
+                                    <label class="form-label">Số tiền tối thiểu:</label>
                                     <input type="number" class="form-control" name="minimum_amount"
                                         value="{{ old('minimum_amount') }}" placeholder="Số tiền tối thiểu">
                                     @if ($errors->has('minimum_amount'))

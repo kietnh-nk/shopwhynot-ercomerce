@@ -34,7 +34,7 @@ class VoucherController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'discount_value' => 'required|numeric',
-            'minimum_amount' => 'required|numeric',
+            'minimum_amount' => 'nullable|numeric',
             'usage_limit' => 'nullable|integer',
             'apply_for' => 'required|in:specific_products,new_accounts,all',
         ]);

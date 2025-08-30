@@ -8,7 +8,6 @@
                     </div>
                 </th>
                 <th class="sort">Sản phẩm</th>
-                <th class="sort">Số lượng còn</th>
                 <th class="sort text-center" style="width: 160px">Sku</th>
                 <th class="sort text-center" style="width: 160px">Trạng thái</th>
                 <th class="sort text-end" style="width: 100px">Thao tác</th>

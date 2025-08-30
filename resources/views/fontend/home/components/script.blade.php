@@ -4,7 +4,7 @@
 <!-- jQurery Ui  -->
 <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"
     integrity="sha256-u0L8aA6Ev3bY2HI4y0CAyr9H8FRWgX4hZ9+K7C2nzdc=" crossorigin="anonymous"></script>
-    
+
 <!-- bootstrap5 js   -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
@@ -38,6 +38,8 @@
 {{-- vue js  --}}
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 {{-- @vite(['resources/js/app.js']) --}}
+<script src="/libaries/plugins/ckeditor/vendor/lin.js"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.5/dist/gsap.min.js"></script>
