@@ -70,27 +70,51 @@ class ProductService implements ProductServiceInterface
         return $products;
     }
 
+    private function generateUniqueSku()
+    {
+        do {
+            $sku = 'SP' . strtoupper(Str::random(6)); // SP + 6 ký tự
+        } while (Product::where('sku', $sku)->exists());
+
+        return $sku;
+    }
+
     public function create($request)
     {
         DB::beginTransaction();
         try {
-            // Validate dữ liệu trước khi tạo
+            // 1) Validate dữ liệu
             $this->validateProductData($request);
-            
+
+            // 2) Tạo/gán SKU trước khi insert vào DB
+            $sku = $request->filled('sku') ? $request->sku : $this->generateUniqueSku();
+
+            // Nếu $request là instance của Illuminate\Http\Request / FormRequest
+            if (is_object($request) && method_exists($request, 'merge')) {
+                $request->merge(['sku' => $sku]);
+            } elseif (is_array($request)) {
+                // nếu bạn truyền mảng thay vì Request
+                $request['sku'] = $sku;
+            }
+
+            // 3) Tạo product (createProduct sẽ đọc sku từ $request)
             $product = $this->createProduct($request);
 
-            // Trường hợp không có phiên bản
-            if (!isset($request->variant['sku']) || count($request->variant['sku']) === 0) {
-                $product->sku = $request->sku; // Lưu SKU từ request
+            // 4) Nếu không có variant -> chỉ lưu product (product đã có sku)
+            if (!isset($request->variant) || empty($request->variant) || !isset($request->variant['sku']) || count($request->variant['sku']) === 0) {
+                // Đảm bảo product có sku (phòng trường hợp createProduct ko nhận sku)
+                if (empty($product->sku)) {
+                    $product->sku = $sku;
+                }
                 $product->save();
-            }
-
-            // Trường hợp có phiên bản
-            if (isset($request->variant['sku']) && count($request->variant['sku']) > 0) {
+            } else {
+                // 5) Nếu có variant -> tạo variant (hàm createVariant xử lý SKU cho từng variant nếu cần)
                 $this->createVariant($product, $request);
             }
+
             DB::commit();
-            return true;
+            // trả về product cho controller/khác tiện debug; nếu bạn muốn true thì đổi lại
+            return $product;
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Lỗi tạo sản phẩm: ' . $e->getMessage());
@@ -189,7 +213,7 @@ class ProductService implements ProductServiceInterface
     {
         $payload = $request->only($this->payload());
         $payload['del'] = (isset($payload['del'])) ? $payload['del'] : '0';
-        $payload['slug'] = Str::slug($payload['slug'], '-').'-'.rand(10000, 99999);
+        $payload['slug'] = Str::slug($payload['slug'], '-') . '-' . rand(10000, 99999);
         $payload['attributeCatalogue'] = $this->formatJson($request, 'attributeCatalogue');
         $payload['attribute'] = $request->input('attribute');
         $payload['variant'] = $this->formatJson($request, 'variant');
@@ -395,7 +419,8 @@ class ProductService implements ProductServiceInterface
         return $arrayColorId;
     }
     // dashboard
-    public function productSaler(){
+    public function productSaler()
+    {
         $condition = [
             'where' => [
                 ['publish', '=',  1],
@@ -414,7 +439,8 @@ class ProductService implements ProductServiceInterface
 
         return $products;
     }
-    public function productNews(){
+    public function productNews()
+    {
         $condition = [
             'where' => [
                 ['publish', '=',  1],
@@ -432,7 +458,8 @@ class ProductService implements ProductServiceInterface
 
         return $products;
     }
-    public function productSales(){
+    public function productSales()
+    {
         $products = $this->productRepository->getLimitOrder(
             ['productVariant', 'productVariant.attributes'],
             [
@@ -447,7 +474,8 @@ class ProductService implements ProductServiceInterface
 
         return $products;
     }
-    public function productSupperSales(){
+    public function productSupperSales()
+    {
         $products = $this->productRepository->getLimitOrder(
             ['productVariant', 'productVariant.attributes'],
             [
@@ -561,7 +589,7 @@ class ProductService implements ProductServiceInterface
         $variantQuantities = $request->variant['quantity'] ?? [];
 
         // Kiểm tra SKU variant trùng lặp
-        $duplicateSkus = array_filter(array_count_values($variantSkus), function($count) {
+        $duplicateSkus = array_filter(array_count_values($variantSkus), function ($count) {
             return $count > 1;
         });
 

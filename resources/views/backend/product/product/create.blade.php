@@ -194,6 +194,15 @@
                                     @endif
                                 </div>
                                 <div class="mb-3">
+    <label for="product_instock" class="form-label">Số lượng trong kho<span class="text-danger">*</span></label>
+    <input type="number" name="instock" id="product_instock" class="form-control"
+           value="{{ old('instock', 0) }}" min="0">
+    @if ($errors->has('instock'))
+        <span class="text-danger fz-12 mt-1">{{ $errors->first('instock') }}</span>
+    @endif
+</div>
+
+                                <div class="mb-3">
                                     <label for="" class="form-label">Giá giảm</label>
                                     <input type="text" name="del" class="form-control"
                                         value="{{ old('del') }}" min="0">
