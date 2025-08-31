@@ -5,7 +5,7 @@
 <script type="text/javascript" src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"
     integrity="sha256-u0L8aA6Ev3bY2HI4y0CAyr9H8FRWgX4hZ9+K7C2nzdc=" crossorigin="anonymous"></script>
 <!-- select2 js  -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>   
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <!-- JAVASCRIPT -->
 <script type="text/javascript" src="/libaries/templates/bee-cloudy-admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="/libaries/templates/bee-cloudy-admin/assets/libs/simplebar/simplebar.min.js"></script>
@@ -47,3 +47,5 @@
 <script src="/libaries/js/val_order.js"></script>
 {{-- address --}}
 <script src="/libaries/js/address_vn.js"></script>
+{{-- price format --}}
+<script src="/libaries/js/price-format.js"></script>

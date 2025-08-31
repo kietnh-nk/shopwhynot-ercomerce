@@ -7,11 +7,15 @@
             $(document).on("click", ".turnOnVariant", function () {
                 let _this = $(this);
                 let price = $('input[name="price"]').val();
-                let sku = $('input[name="sku"]').val()
-                if(price == '' || sku == '') {
-                    alert('Vui lòng nhập giá và mã sản phẩm')
-                    return false
-                } 
+                let sku = $('input[name="sku"]').val();
+                if (price == "" || sku == "") {
+                    alert("Vui lòng nhập giá và mã sản phẩm");
+                    return false;
+                }
+                if (isNaN(price) || parseFloat(price) < 0) {
+                    alert("Giá sản phẩm phải là số và lớn hơn hoặc bằng 0");
+                    return false;
+                }
                 if (_this.siblings("input:checked").length == 0) {
                     $(".variant-wrapper").removeClass("d-none");
                 } else {
@@ -27,14 +31,14 @@
             $(document).on("click", ".add-variant", function () {
                 let html = FS.renderVariantItem(attributeCatalogue);
                 $(".variant-body").append(html);
-    
+
                 // Xóa class d-none khỏi phần tử product-variant khi thêm variant
                 // $('.product-variant').removeClass('d-none');
-                
-                // nếu khi mà ng dùng click vào nhóm thuộc tính mới sẽ xóa thead và tbody để render lại 
-                $('.variantTable thead').html('');
-                $('.variantTable tbody').html('');
-    
+
+                // nếu khi mà ng dùng click vào nhóm thuộc tính mới sẽ xóa thead và tbody để render lại
+                $(".variantTable thead").html("");
+                $(".variantTable tbody").html("");
+
                 FS.checkMaxAttributeGroup(attributeCatalogue);
                 FS.disabledAttributeCatalogueChoose();
             });
@@ -49,7 +53,8 @@
         html = html + '<div class="col-lg-3">';
         html = html + '<div class="attribute-catalogue">';
         html =
-            html + '<select name="attributeCatalogue[]" id="" class="choose-attribute niceSelect">';
+            html +
+            '<select name="attributeCatalogue[]" id="" class="choose-attribute niceSelect">';
         html = html + '<option value="">Nhóm thuộc tính</option>';
         for (let i = 0; i < attributeCatalogue.length; i++) {
             html =
@@ -131,7 +136,7 @@
             // tính lại và bật số lượng thuộc tính và bât lại nút
             FS.checkMaxAttributeGroup(attributeCatalogue);
             // xóa xong gọi lại hàm này cho render lại các thuộc tính còn k bị xóa
-            FS.createVariant()
+            FS.createVariant();
         });
     };
 
@@ -164,7 +169,9 @@
                     .parents(".col-lg-3")
                     .siblings(".col-lg-8")
                     .html(
-                        '<input type="text" name="attribute['+attributeCatalogueId+'][]" disabled="" class="fake-variant form-control">'
+                        '<input type="text" name="attribute[' +
+                            attributeCatalogueId +
+                            '][]" disabled="" class="fake-variant form-control">'
                     );
             }
             FS.disabledAttributeCatalogueChoose();
@@ -211,8 +218,8 @@
 
     FS.createVariant = () => {
         let attributes = []; // lưu tên
-        let variants = []; //lưu id 
-        let attributeTitle = []; // lưu đầu mục 
+        let variants = []; //lưu id
+        let attributeTitle = []; // lưu đầu mục
         $(".variant-item").each(function () {
             let _this = $(this);
             let attr = [];
@@ -232,7 +239,7 @@
                 let item = {};
                 let itemVariant = {};
                 item[optionText] = attribute[i].text;
-                itemVariant[attrinbuteCatalogueId] = attribute[i].id 
+                itemVariant[attrinbuteCatalogueId] = attribute[i].id;
                 attr.push(item); // push text vào mảng attr
                 attrVariant.push(itemVariant); // push ud vào mảng attr
             }
@@ -244,118 +251,147 @@
             variants.push(attrVariant);
         });
         // tạo ra tất cả phiên bản từ việc chọn dữ liệu trong select
-        /* kiểu như này 
+        /* kiểu như này
             {Màu sắc: 'Vàng', Kích Thước: '128GB', Vật liệu: 'Titan'}
             {Màu sắc: 'Đỏ', Kích Thước: '128GB', Vật liệu: 'Titan'}
         */
         attributes = attributes.reduce((a, b) =>
             a.flatMap((d) => b.map((e) => ({ ...d, ...e })))
         );
-        // tạo ra các phiên bản ghép id variant lại với nhau 
+        // tạo ra các phiên bản ghép id variant lại với nhau
         variants = variants.reduce((a, b) =>
             a.flatMap((d) => b.map((e) => ({ ...d, ...e })))
         );
 
-        
-        // gọi hàm tách việc render ra, k mất dữ liệu khi thêm mới thuộc tính or loại 
-        FS.createTableheader(attributeTitle)
-        // reder nguyên bảng -> dẫn dến mất dữ liệu các variant khi thêm mới thuộc tính  
+        // gọi hàm tách việc render ra, k mất dữ liệu khi thêm mới thuộc tính or loại
+        FS.createTableheader(attributeTitle);
+        // reder nguyên bảng -> dẫn dến mất dữ liệu các variant khi thêm mới thuộc tính
         // let html = FS.renderTableHtml(attributes, attributeTitle, variants);
         // $("table.variantTable").html(html);
-        
-        let trClass = []
+
+        let trClass = [];
         attributes.forEach((item, index) => {
             let $row = FS.createVairantRow(item, variants[index]);
-            let classModified = 'tr-variant-'+Object.values(variants[index]).join(', ').replace(/, /g, '-')
-            trClass.push(classModified)
-            // kiểm tra nếu k có class thì mới apend row -> tránh trung row đã có 
-            if(!$('table.variantTable tbody tr').hasClass(classModified)){
-                $('table.variantTable tbody').append($row);
+            let classModified =
+                "tr-variant-" +
+                Object.values(variants[index]).join(", ").replace(/, /g, "-");
+            trClass.push(classModified);
+            // kiểm tra nếu k có class thì mới apend row -> tránh trung row đã có
+            if (!$("table.variantTable tbody tr").hasClass(classModified)) {
+                $("table.variantTable tbody").append($row);
             }
         });
-        $('table.variantTable tbody tr').each(function (){
-            const $row = $(this)
-            const rowClasses = $row.attr('class')
-            if(rowClasses){
-                const rowClassArray = rowClasses.split(' ')
-                let shouldRemove = false
-                rowClassArray.forEach(rowClass => {
-                    if(rowClass == 'variant-row'){
-                        return
-                    }else if(!trClass.includes(rowClass)){
-                        shouldRemove = true
+        $("table.variantTable tbody tr").each(function () {
+            const $row = $(this);
+            const rowClasses = $row.attr("class");
+            if (rowClasses) {
+                const rowClassArray = rowClasses.split(" ");
+                let shouldRemove = false;
+                rowClassArray.forEach((rowClass) => {
+                    if (rowClass == "variant-row") {
+                        return;
+                    } else if (!trClass.includes(rowClass)) {
+                        shouldRemove = true;
                     }
-                }) 
-                if(shouldRemove){
-                    $row.remove()
+                });
+                if (shouldRemove) {
+                    $row.remove();
                 }
             }
-        })
+        });
     };
-    // tách phân thead và tbody 
-    FS.createTableheader = (atrtibuteTitle) =>{
-        let tHead = $('table.variantTable thead') 
-        let row = $('<tr>')
-        row.append($('<td>').text('Hình ảnh'))
-        for(let i = 0; i < atrtibuteTitle.length; i++){
-            row.append($('<td>').text(atrtibuteTitle[i]))
+    // tách phân thead và tbody
+    FS.createTableheader = (atrtibuteTitle) => {
+        let tHead = $("table.variantTable thead");
+        let row = $("<tr>");
+        row.append($("<td>").text("Hình ảnh"));
+        for (let i = 0; i < atrtibuteTitle.length; i++) {
+            row.append($("<td>").text(atrtibuteTitle[i]));
         }
-        row.append($('<td>').text('Số lượng'))
-        row.append($('<td>').text('Giá'))
-        row.append($('<td>').text('SKU'))
-        tHead.html(row)
-        return tHead
-    }
+        row.append($("<td>").text("Số lượng"));
+        row.append($("<td>").text("Giá"));
+        row.append($("<td>").text("SKU"));
+        tHead.html(row);
+        return tHead;
+    };
     FS.createVairantRow = (attributeItem, variantItem) => {
-
-        let attributeString = Object.values(attributeItem).join(', ')
-        let attributeId = Object.values(variantItem).join(', ')
+        let attributeString = Object.values(attributeItem).join(", ");
+        let attributeId = Object.values(variantItem).join(", ");
         // chuyyển tất cả dấu , trong chuỗi attributeId thành -
-        let classModified = attributeId.replace(/, /g, '-')
+        let classModified = attributeId.replace(/, /g, "-");
 
-        let $row = $('<tr>').addClass('variant-row tr-variant-'+classModified)
-        let $td
-        $td = $('<td>').css({"width" : "120px", "text-align": "start"}).append(
-            $('<span>').addClass('image img-cover object-fit-cover').append(
-                $('<img>').addClass('w-100').attr('src', '/libaries/upload/images/img-notfound.png').addClass('imageSrc')
-            )
-        )
-        $row.append($td)
-        // mảng giá trị thuộc tính đc chọn 
-        Object.values(attributeItem).forEach(value => {
-            $td = $('<td>').text(value)
-            $row.append($td)
-        })
-        $td = $('<td>').addClass('d-none td-variant')
-        let mainPrice = $('input[name=price]').val()
-        let mainSku = $('input[name=sku]').val()
+        let $row = $("<tr>").addClass(
+            "variant-row tr-variant-" + classModified
+        );
+        let $td;
+        $td = $("<td>")
+            .css({ width: "120px", "text-align": "start" })
+            .append(
+                $("<span>")
+                    .addClass("image img-cover object-fit-cover")
+                    .append(
+                        $("<img>")
+                            .addClass("w-100")
+                            .attr(
+                                "src",
+                                "/libaries/upload/images/img-notfound.png"
+                            )
+                            .addClass("imageSrc")
+                    )
+            );
+        $row.append($td);
+        // mảng giá trị thuộc tính đc chọn
+        Object.values(attributeItem).forEach((value) => {
+            $td = $("<td>").text(value);
+            $row.append($td);
+        });
+        $td = $("<td>").addClass("d-none td-variant");
+        let mainPrice = $("input[name=price]").val() || 0;
+        // Convert formatted price to numeric value
+        if (mainPrice && typeof mainPrice === "string") {
+            mainPrice = mainPrice.replace(/[^\d.]/g, "");
+        }
+        let mainSku = $("input[name=sku]").val();
         let inputHidenFields = [
-            {name: 'variant[quantity][]', class: 'variant_quantity'},
-            {name: 'variant[sku][]', class: 'variant_sku', value: mainSku+'-'+classModified},
-            {name: 'variant[price][]', class: 'variant_price', value: mainPrice},
-            {name: 'variant[file_name][]', class: 'variant_filename'},
-            {name: 'variant[file_url][]', class: 'variant_fileurl'},
-            {name: 'variant[album][]', class: 'variant_album'},
-            {name: 'productVariant[name][]', value: attributeString},
-            {name: 'productVariant[id][]', value: attributeId},
-        ]
+            { name: "variant[quantity][]", class: "variant_quantity" },
+            {
+                name: "variant[sku][]",
+                class: "variant_sku",
+                value: mainSku + "-" + classModified,
+            },
+            {
+                name: "variant[price][]",
+                class: "variant_price",
+                value: mainPrice,
+            },
+            { name: "variant[file_name][]", class: "variant_filename" },
+            { name: "variant[file_url][]", class: "variant_fileurl" },
+            { name: "variant[album][]", class: "variant_album" },
+            { name: "productVariant[name][]", value: attributeString },
+            { name: "productVariant[id][]", value: attributeId },
+        ];
         $.each(inputHidenFields, function (_, field) {
-            let $input = $('<input>').attr('type', 'text').attr('name', field.name).addClass(field.class)
-            if(field.value){
-                $input.val(field.value)
+            let $input = $("<input>")
+                .attr("type", "text")
+                .attr("name", field.name)
+                .addClass(field.class);
+            if (field.value) {
+                $input.val(field.value);
             }
-            $td.append($input)
-        })
+            $td.append($input);
+        });
 
-        $row.append($('<td>').addClass('td-quantity').text(1))
-            .append($('<td>').addClass('td-price').text(mainPrice))
-            .append($('<td>').addClass('td-sku').text(mainSku+'-'+classModified))
-            .append($td)
-            return $row
-    }
-    
+        $row.append($("<td>").addClass("td-quantity").text(1))
+            .append($("<td>").addClass("td-price").text(mainPrice))
+            .append(
+                $("<td>")
+                    .addClass("td-sku")
+                    .text(mainSku + "-" + classModified)
+            )
+            .append($td);
+        return $row;
+    };
 
-    
     // 1. bắt sự kiện click nut upload album variant
     FS.variantAlbum = () => {
         $(document).on("click", ".upload-variant-picture", function (e) {
@@ -475,11 +511,13 @@
     FS.updateVariant = () => {
         $(document).on("click", ".variant-row", function () {
             let _this = $(this);
-            let variantData = {}
-            _this.find(".td-variant input[type=text][class^='variant_']").each(function (){
-                let className = $(this).attr("class")
-                variantData[className] = $(this).val()
-            })
+            let variantData = {};
+            _this
+                .find(".td-variant input[type=text][class^='variant_']")
+                .each(function () {
+                    let className = $(this).attr("class");
+                    variantData[className] = $(this).val();
+                });
             // gọi updateVariantHtml trả về nội dung
             let updateVariantBox = FS.updateVariantHtml(variantData);
             // chèn nội dung vào sau đối tượng đc chọn
@@ -491,30 +529,37 @@
 
     FS.variantAlbumList = (album) => {
         let html = "";
-        if(album.length && album[0] !== ''){
-            for(let i=0; i<album.length;i++){
-                html +='<li class="album-item-seft list-unstyled m-2">'
-                    html +='<div class="thumb position-relative">'
-                        html +='<span class="span image img-scaledown">'
-                            html +='<img src="'+album[i]+'" alt="'+album[i]+'" class="object-fit-contain" width="130px" height="110px">'
-                            html +='<input type="hidden" name="variantAlbum[]" value="'+album[i]+'">'
-                            html +='<button class="delete-variant-image position-absolute top-0 start-0">'
-                                html +='<i class="fa-solid fa-trash"></i>'
-                            html +='</button>'
-                        html +='</span>'
-                    html +='</div>'
-                html +='</li>'
+        if (album.length && album[0] !== "") {
+            for (let i = 0; i < album.length; i++) {
+                html += '<li class="album-item-seft list-unstyled m-2">';
+                html += '<div class="thumb position-relative">';
+                html += '<span class="span image img-scaledown">';
+                html +=
+                    '<img src="' +
+                    album[i] +
+                    '" alt="' +
+                    album[i] +
+                    '" class="object-fit-contain" width="130px" height="110px">';
+                html +=
+                    '<input type="hidden" name="variantAlbum[]" value="' +
+                    album[i] +
+                    '">';
+                html +=
+                    '<button class="delete-variant-image position-absolute top-0 start-0">';
+                html += '<i class="fa-solid fa-trash"></i>';
+                html += "</button>";
+                html += "</span>";
+                html += "</div>";
+                html += "</li>";
             }
         }
-        return html
-    }
+        return html;
+    };
     // nội dung html edit pb sản phẩm
     FS.updateVariantHtml = (variantData) => {
-    
-        
         // chuyển chuổi thành mảng -> load ra
-        let variantAlbum = variantData.variant_album.split(',');
-        let vatiantAlbumItem = FS.variantAlbumList(variantAlbum)
+        let variantAlbum = variantData.variant_album.split(",");
+        let vatiantAlbumItem = FS.variantAlbumList(variantAlbum);
         let html = "";
         html += ' <tr class="updateVariantTr">';
         html += ' <td colspan="6" class="px-0">';
@@ -548,7 +593,10 @@
         html += ' <div class="card-body">';
         html += ' <div class="row">';
         html += ' <div class="col-lg-12">';
-        html += ' <div class="click-to-upload-variant text-center '+( (variantAlbum.length > 0 && variantAlbum[0] != '') ? 'd-none' : '')+'">';
+        html +=
+            ' <div class="click-to-upload-variant text-center ' +
+            (variantAlbum.length > 0 && variantAlbum[0] != "" ? "d-none" : "") +
+            '">';
         html += ' <div class="icon">';
         html += ' <a type="button" class="upload-variant-picture">';
         html +=
@@ -560,10 +608,15 @@
             " <span>Sử dụng nút chọn hình hoặc click vào đây để thêm hình ảnh.</span>";
         html += " </div>";
         html += " </div>";
-        html += ' <div class="upload-variant-list '+( (variantAlbum.length == 0 && variantAlbum != '') ? 'd-none' : '' )+'">';
+        html +=
+            ' <div class="upload-variant-list ' +
+            (variantAlbum.length == 0 && variantAlbum != "" ? "d-none" : "") +
+            '">';
         html += ' <div class="row">';
         html +=
-            ' <ul id="sortable2" class="clearfix data-album sortui ui-sortable d-lg-flex justify-content-start flex-wrap">'+vatiantAlbumItem+' </ul>';
+            ' <ul id="sortable2" class="clearfix data-album sortui ui-sortable d-lg-flex justify-content-start flex-wrap">' +
+            vatiantAlbumItem +
+            " </ul>";
         html += " </div>";
         html += " </div>";
         html += " </div>";
@@ -579,17 +632,23 @@
         html += ' <div class="col-lg-4">';
         html += ' <label for="" class="control-label ">Số lượng</label>';
         html +=
-            ' <input type="text" class="form-control int" id="variantQuantity" required name="variant_quantity" value="'+ (variantData.variant_quantity ? variantData.variant_quantity : 1) +'">';
+            ' <input type="number" class="form-control" id="variantQuantity" required name="variant_quantity" value="' +
+            (variantData.variant_quantity ? variantData.variant_quantity : 1) +
+            '" min="0">';
         html += " </div>";
         html += ' <div class="col-lg-4">';
         html += ' <label for="" class="control-label">SKU</label>';
         html +=
-            ' <input type="text" class="form-control" name="variant_sku" value="'+variantData.variant_sku+'">';
+            ' <input type="text" class="form-control" name="variant_sku" value="' +
+            variantData.variant_sku +
+            '">';
         html += " </div>";
         html += ' <div class="col-lg-4">';
         html += ' <label for="" class="control-label">Giá</label>';
         html +=
-            ' <input type="text" class="form-control" name="variant_price" value="'+variantData.variant_price+'">';
+            ' <input type="number" class="form-control" name="variant_price" value="' +
+            variantData.variant_price +
+            '" min="0" step="0.01">';
         html += " </div>";
         html += " </div>";
         html += " </div>";
@@ -603,12 +662,16 @@
         html += ' <div class="col-lg-6">';
         html += ' <label for="" class="control-label">Tên file</label>';
         html +=
-            ' <input type="text" class="form-control" name="variant_file_name"  value="'+variantData.variant_filename+'">';
+            ' <input type="text" class="form-control" name="variant_file_name"  value="' +
+            variantData.variant_filename +
+            '">';
         html += " </div>";
         html += ' <div class="col-lg-6">';
         html += ' <label for="" class="control-label">Đường dẫn</label>';
         html +=
-            ' <input type="text" class="form-control" name="variant_file_url" value="'+variantData.variant_fileurl+'">';
+            ' <input type="text" class="form-control" name="variant_file_url" value="' +
+            variantData.variant_fileurl +
+            '">';
         html += " </div>";
         html += " </div>";
         html += " </div>";
@@ -623,7 +686,7 @@
     // hàm hủy kh update các field của phiên bản
     FS.cancelVariantUpdate = () => {
         $(document).on("click", ".cancelUpdate", function () {
-            FS.closeUpdateVariantBox()
+            FS.closeUpdateVariantBox();
         });
     };
     FS.saveVariantUpdate = () => {
@@ -640,22 +703,20 @@
                         return $(this).val();
                     })
                     .get(),
-                };
-                 
-                $.each(variant, function (index, value) {
-                    $(".updateVariantTr")
-                        .prev()
-                        .find(".variant_" + index)
-                        .val(value);
-                   
-                });
-                FS.showProductVariant(variant)
-            FS.closeUpdateVariantBox()
+            };
 
+            $.each(variant, function (index, value) {
+                $(".updateVariantTr")
+                    .prev()
+                    .find(".variant_" + index)
+                    .val(value);
+            });
+            FS.showProductVariant(variant);
+            FS.closeUpdateVariantBox();
         });
     };
 
-    FS.showProductVariant = (variant) =>{
+    FS.showProductVariant = (variant) => {
         let option = {
             quantity: variant.quantity,
             price: variant.price,
@@ -671,85 +732,130 @@
             .prev()
             .find(".imageSrc")
             .attr("src", variant.album[0]);
-    }
+    };
     FS.closeUpdateVariantBox = () => {
-        $('.updateVariantTr').remove()
-    }
+        $(".updateVariantTr").remove();
+    };
 
-    // sử dụng callback để gọi hàm đúng trình tự 
+    // sử dụng callback để gọi hàm đúng trình tự
     FS.setUpSelectMultiple = (callback) => {
-       if($('.selectVariant').length){
-        //biến đếm 
-        let count = $('.selectVariant').length
+        if ($(".selectVariant").length) {
+            //biến đếm
+            let count = $(".selectVariant").length;
 
-        $('.selectVariant').each(function (){
-            let _this = $(this);
-            let attributeCatalogueId = _this.attr('data-catid')
-            if(attribute != ''){
-                $.get('/ajax/attribute/loadAttribute',{
-                    attribute: attribute,
-                    attributeCatalogueId: attributeCatalogueId
-                }, function(data){
-                    if(data.items != 'undefined' && data.items.length){
-                        for(let i = 0; i < data.items.length; i++){
-                            var option = new Option(data.items[i].text, data.items[i].id, true, true);
-                            // sử dụng .trigger('change') để tự render ra bảng khi dữ liệu chọn vẫn còn tron select
-                            _this.append(option).trigger('change');
+            $(".selectVariant").each(function () {
+                let _this = $(this);
+                let attributeCatalogueId = _this.attr("data-catid");
+                if (attribute != "") {
+                    $.get(
+                        "/ajax/attribute/loadAttribute",
+                        {
+                            attribute: attribute,
+                            attributeCatalogueId: attributeCatalogueId,
+                        },
+                        function (data) {
+                            if (
+                                data.items != "undefined" &&
+                                data.items.length
+                            ) {
+                                for (let i = 0; i < data.items.length; i++) {
+                                    var option = new Option(
+                                        data.items[i].text,
+                                        data.items[i].id,
+                                        true,
+                                        true
+                                    );
+                                    // sử dụng .trigger('change') để tự render ra bảng khi dữ liệu chọn vẫn còn tron select
+                                    _this.append(option).trigger("change");
+                                }
+                            }
+                            // nếu mà lùi biến đếm === 0 và tồn tại callback thì gọi lại lại callback
+                            if (--count == 0 && callback) {
+                                callback();
+                            }
                         }
-                    }
-                    // nếu mà lùi biến đếm === 0 và tồn tại callback thì gọi lại lại callback
-                    if(--count == 0 && callback){
-                        callback()
-                    }
-                })
-            }
-            FS.getSelect2(_this)
-        })
-        
-       }
-    }
+                    );
+                }
+                FS.getSelect2(_this);
+            });
+        }
+    };
     FS.productVariant = () => {
-        // bắt lại biến variant bên blade 
-        variant = JSON.parse(atob(variant))
+        // bắt lại biến variant bên blade
+        variant = JSON.parse(atob(variant));
         let variantQuantity = window.variantQuantities;
 
-        const findIndexVariantBySku = (sku) => variant.sku.findIndex((item) => item === sku)
+        const findIndexVariantBySku = (sku) =>
+            variant.sku.findIndex((item) => item === sku);
 
-        // loop qua từng row và đổ dữ liệu vào 
-        $('.variant-row').each(function (index, value){
-            let _this = $(this)
-            let variantKey = _this.attr('class').match(/tr-variant-(\d+-\d+)/)[1];
-            let dataIndex = variant.sku.findIndex(sku => sku.includes(variantKey));
+        // loop qua từng row và đổ dữ liệu vào
+        $(".variant-row").each(function (index, value) {
+            let _this = $(this);
+            let variantKey = _this
+                .attr("class")
+                .match(/tr-variant-(\d+-\d+)/)[1];
+            let dataIndex = variant.sku.findIndex((sku) =>
+                sku.includes(variantKey)
+            );
             // console.log(variantKey, dataIndex)
             let newQuantity = variant.quantity[dataIndex]; // giá trị mặc định
             if (variantQuantity && variantQuantity[dataIndex]) {
                 newQuantity = variantQuantity[dataIndex].quantity;
             }
-            if(dataIndex !== -1){
+            if (dataIndex !== -1) {
                 let inputHidenFields = [
-                    
-                    {name: 'variant[quantity][]',class: 'variant_quantity', value: newQuantity},
-                    {name: 'variant[sku][]', class: 'variant_sku', value: variant.sku[dataIndex]},
-                    {name: 'variant[price][]', class: 'variant_price', value: variant.price[dataIndex]},
-                    {name: 'variant[file_name][]', class: 'variant_filename',value: variant.file_name[dataIndex]},
-                    {name: 'variant[file_url][]', class: 'variant_fileurl', value: variant.file_url[dataIndex]},
-                    {name: 'variant[album][]', class: 'variant_album', value: variant.album[dataIndex]},
-                ]
-                // đổ vào input trong form variant 
-                for(let i = 0; i < inputHidenFields.length; i++) {
+                    {
+                        name: "variant[quantity][]",
+                        class: "variant_quantity",
+                        value: newQuantity,
+                    },
+                    {
+                        name: "variant[sku][]",
+                        class: "variant_sku",
+                        value: variant.sku[dataIndex],
+                    },
+                    {
+                        name: "variant[price][]",
+                        class: "variant_price",
+                        value: variant.price[dataIndex],
+                    },
+                    {
+                        name: "variant[file_name][]",
+                        class: "variant_filename",
+                        value: variant.file_name[dataIndex],
+                    },
+                    {
+                        name: "variant[file_url][]",
+                        class: "variant_fileurl",
+                        value: variant.file_url[dataIndex],
+                    },
+                    {
+                        name: "variant[album][]",
+                        class: "variant_album",
+                        value: variant.album[dataIndex],
+                    },
+                ];
+                // đổ vào input trong form variant
+                for (let i = 0; i < inputHidenFields.length; i++) {
                     // tìm đến input có name và đổ dữ liệu vào input
-                    _this.find('.'+ inputHidenFields[i].class).val((inputHidenFields[i].value) ? inputHidenFields[i].value : 0)
+                    _this
+                        .find("." + inputHidenFields[i].class)
+                        .val(
+                            inputHidenFields[i].value
+                                ? inputHidenFields[i].value
+                                : 0
+                        );
                 }
                 // đổ vào input trong td table
-                let album = variant.album[dataIndex]
-                let variantAvtImage = (album) ? album.split(',')[0] : ''
-                _this.find('.td-quantity').html(newQuantity)
-                _this.find('.td-price').html(variant.price[dataIndex])
-                _this.find('.td-sku').html(variant.sku[dataIndex])
-                _this.find('.imageSrc').attr('src', variantAvtImage)
+                let album = variant.album[dataIndex];
+                let variantAvtImage = album ? album.split(",")[0] : "";
+                _this.find(".td-quantity").html(newQuantity);
+                _this.find(".td-price").html(variant.price[dataIndex]);
+                _this.find(".td-sku").html(variant.sku[dataIndex]);
+                _this.find(".imageSrc").attr("src", variantAvtImage);
             }
-        })
-    }
+        });
+    };
     // gọi hàm
     $(document).ready(function () {
         FS.setUpProductVariant();
@@ -765,10 +871,8 @@
         FS.updateVariant();
         FS.cancelVariantUpdate();
         FS.saveVariantUpdate();
-        FS.setUpSelectMultiple(
-            () => {
-                FS.productVariant()
-            }
-        );
+        FS.setUpSelectMultiple(() => {
+            FS.productVariant();
+        });
     });
 })(jQuery);

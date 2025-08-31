@@ -15,6 +15,38 @@ class StoreProductRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        // Convert formatted price values to numeric
+        if ($this->has('price')) {
+            $this->merge([
+                'price' => $this->convertFormattedPrice($this->input('price'))
+            ]);
+        }
+
+        if ($this->has('del')) {
+            $this->merge([
+                'del' => $this->convertFormattedPrice($this->input('del'))
+            ]);
+        }
+    }
+
+    /**
+     * Convert formatted price string to numeric value
+     */
+    private function convertFormattedPrice($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+
+        // Remove commas and other non-numeric characters except decimal point
+        return preg_replace('/[^\d.]/', '', $value);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -27,10 +59,10 @@ class StoreProductRequest extends FormRequest
             'info' => 'nullable|max:255',
             'description' => 'nullable|string',
             'product_catalogue_id' => 'required|array|min:1',
-            'product_catalogue_id.*' => 'exists:product_catalogues,id',
+            'product_catalogue_id.*' => 'exists:product_catalogues,id|not_in:0',
             'instock' => 'required|integer|min:0',
-            'brand_id' => 'required|exists:brands,id',
-            'sku'=> 'required|string|max:255|unique:products,sku',
+            'brand_id' => 'required|exists:brands,id|not_in:0',
+            'sku' => 'required|string|max:255|unique:products,sku',
             'price' => 'required|numeric|min:0',
             'del' => 'nullable|numeric|min:0',
             'publish' => 'nullable|in:0,1',
@@ -38,7 +70,10 @@ class StoreProductRequest extends FormRequest
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'album.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'attribute' => 'nullable|array',
-            'variant' => 'nullable|array'
+            'variant' => 'nullable|array',
+            'variant.sku.*' => 'nullable|string|max:255',
+            'variant.price.*' => 'nullable|numeric|min:0',
+            'variant.quantity.*' => 'nullable|integer|min:0'
         ];
     }
     public function messages(): array
@@ -54,11 +89,13 @@ class StoreProductRequest extends FormRequest
             'product_catalogue_id.array' => 'Danh mục sản phẩm phải là một mảng.',
             'product_catalogue_id.min' => 'Vui lòng chọn ít nhất một danh mục sản phẩm.',
             'product_catalogue_id.*.exists' => 'Danh mục sản phẩm không tồn tại.',
+            'product_catalogue_id.*.not_in' => 'Vui lòng chọn danh mục sản phẩm hợp lệ.',
             'instock.required' => 'Bạn chưa nhập số lượng sản phẩm.',
             'instock.integer' => 'Số lượng phải là số nguyên.',
             'instock.min' => 'Số lượng phải lớn hơn hoặc bằng 0.',
             'brand_id.required' => 'Vui lòng chọn thương hiệu.',
             'brand_id.exists' => 'Thương hiệu không tồn tại.',
+            'brand_id.not_in' => 'Vui lòng chọn thương hiệu hợp lệ.',
             'sku.required' => 'SKU là bắt buộc.',
             'sku.string' => 'SKU phải là chuỗi ký tự.',
             'sku.max' => 'SKU không được vượt quá 255 ký tự.',
@@ -76,6 +113,12 @@ class StoreProductRequest extends FormRequest
             'album.*.image' => 'File phải là hình ảnh.',
             'album.*.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, webp.',
             'album.*.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+            'variant.sku.*.string' => 'SKU variant phải là chuỗi ký tự.',
+            'variant.sku.*.max' => 'SKU variant không được vượt quá 255 ký tự.',
+            'variant.price.*.numeric' => 'Giá variant phải là số.',
+            'variant.price.*.min' => 'Giá variant phải lớn hơn hoặc bằng 0.',
+            'variant.quantity.*.integer' => 'Số lượng variant phải là số nguyên.',
+            'variant.quantity.*.min' => 'Số lượng variant phải lớn hơn hoặc bằng 0.',
         ];
     }
 }

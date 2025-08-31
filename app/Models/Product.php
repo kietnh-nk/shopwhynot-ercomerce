@@ -36,13 +36,13 @@ class Product extends Model
         'like_count'
 
     ];
-    
-    // casts chuyển json thành mảng khi lấy ra và thành json khi insert vào 
+
+    // casts chuyển json thành mảng khi lấy ra và thành json khi insert vào
     protected $casts = [
         'attribute' => 'json'
     ];
 
-    //khai báo quan hệ n-n vs bảng product_catalogues thông qua bảng pivot 
+    //khai báo quan hệ n-n vs bảng product_catalogues thông qua bảng pivot
     public function productCatalogues(): BelongsToMany
     {
         return $this->belongsToMany(ProductCatalogue::class, 'product_catalogue_product', 'product_id', 'product_catalogue_id');
@@ -57,7 +57,7 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class, 'product_id', 'id');
     }
-    
+
     public function wishlists(): HasMany
     {
         return $this->hasMany(WishList::class, 'product_id', 'id');
@@ -65,5 +65,10 @@ class Product extends Model
     public function vouchers()
     {
         return $this->belongsToMany(Voucher::class, 'voucher_products');
+    }
+
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id', 'id');
     }
 }

@@ -1,0 +1,50 @@
+/* Price input styling */
+.price-input {
+    font-family: "Courier New", monospace;
+    font-weight: 500;
+    text-align: right;
+}
+
+.price-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.price-input::placeholder {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Number input styling */
+input[type="number"] {
+    text-align: right;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+/* Input group styling */
+.input-group .form-control {
+    border-right: 0;
+}
+
+.input-group .input-group-text {
+    background-color: #f8f9fa;
+    border-left: 0;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* Error state */
+.price-input.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Success state */
+.price-input.is-valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}

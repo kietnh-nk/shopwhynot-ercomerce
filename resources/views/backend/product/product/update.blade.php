@@ -154,26 +154,43 @@
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label for="product_sku" class="form-label">Mã sản phẩm</label>
+                                    <label for="product_sku" class="form-label">Mã sản phẩm <span class="text-danger fz-18">*</span></label>
                                     <input type="text" name="sku" id="product_sku" class="form-control"
-                                        placeholder="Nhập mã sản phẩm" value="{{ old('sku', $product->sku) }}">
+                                        placeholder="Nhập mã sản phẩm" value="{{ old('sku', $product->sku) }}" required>
                                     @if ($errors->has('sku'))
                                         <span class="text-danger fz-12 mt-1">{{ $errors->first('sku') }}</span>
                                     @endif
                                 </div>
                                 <div class="mb-3">
-                                    <label for="" class="form-label">Giá</label>
-                                    <input type="text" name="price" class="form-control"
-                                        placeholder="Nhập giá cho sản phẩm"
-                                        value="{{ old('price', $product->price) }}" min="0">
+                                    <label for="" class="form-label">Giá <span class="text-danger fz-18">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" name="price" class="form-control price-input"
+                                            placeholder="Nhập giá cho sản phẩm"
+                                            value="{{ old('price', $product->price) }}" required>
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
                                     @if ($errors->has('price'))
                                         <span class="text-danger fz-12 mt-1">{{ $errors->first('price') }}</span>
                                     @endif
                                 </div>
                                 <div class="mb-3">
+                                    <label for="" class="form-label">Số lượng <span class="text-danger fz-18">*</span></label>
+                                    <input type="number" name="instock" class="form-control"
+                                        value="{{ old('instock', $product->instock ?? 0) }}" min="0" step="1"
+                                        placeholder="Nhập số lượng sản phẩm" required
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    @if ($errors->has('instock'))
+                                        <span class="text-danger fz-12 mt-1">{{ $errors->first('instock') }}</span>
+                                    @endif
+                                </div>
+                                <div class="mb-3">
                                     <label for="" class="form-label">Giá giảm</label>
-                                    <input type="text" name="del" class="form-control"
-                                        value="{{ old('del', $product->del) }}" min="0">
+                                    <div class="input-group">
+                                        <input type="text" name="del" class="form-control price-input"
+                                            value="{{ old('del', $product->del) }}"
+                                            placeholder="Nhập giá giảm (nếu có)">
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
                                     <span class="text-warning fz-12 mt-1">Có thể bỏ trống nếu không giảm giá!</span>
                                 </div>
                             </div>

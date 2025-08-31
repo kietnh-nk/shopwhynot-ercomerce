@@ -8,7 +8,7 @@
                     </div>
                 </th>
                 <th class="sort">Sản phẩm</th>
-                <th class="sort">Số lượng còn</th>
+                <th class="sort text-center">Số lượng còn</th>
                 <th class="sort text-center" style="width: 160px">Sku</th>
                 <th class="sort text-center" style="width: 160px">Trạng thái</th>
                 <th class="sort text-end" style="width: 100px">Thao tác</th>
@@ -19,10 +19,14 @@
                 @php
                     $badge = '';
                     if ($item->publish == 1) {
-                        $badge .=
-                            '<span class="badge bg-success-subtle text-success text-uppercase p-2">Hiển Thị</span>';
+                        $badge .= '<span class="badge bg-success-subtle text-success text-uppercase">Hiển Thị</span>';
                     } else {
-                        $badge .= '<span class="badge bg-danger-subtle text-danger text-uppercase p-2">Ẩn</span>';
+                        $badge .= '<span class="badge bg-danger-subtle text-danger text-uppercase">Ẩn</span>';
+                    }
+
+                    // Thêm badge cho sản phẩm nổi bật
+                    if ($item->is_hot == 1) {
+                        $badge .= '<br><span class="badge bg-warning-subtle text-warning mt-1">Nổi bật</span>';
                     }
                 @endphp
                 <tr>
@@ -33,12 +37,15 @@
                         </div>
                     </th>
                     <td class="customer_single_td" style="">
-                        <img src="{{ $item->image ? $item->image : '/libaries/upload/images/img-notfound.png' }}"
-                            alt="" class="object-fit-contain me-2 text-start" width="120px" height="80px">
-                        <div style="line-height: 2.2rem ">
-                            <span class="d-inline-block text-truncate fw-medium fz-16" style="max-width: 500px;">
-                                {{ $item->name }}
-                            </span>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ $item->image ? $item->image : '/libaries/upload/images/img-notfound.png' }}"
+                                alt="" class="object-fit-contain me-3" width="80px" height="60px">
+                            <div class="flex-grow-1">
+                                <div class="fw-medium fz-16 mb-1" style="max-width: 400px;">
+                                    <a href="{{ route('product.update', ['slug' => $item->slug]) }}" class="text-decoration-none">
+                                        {{ $item->name }}
+                                    </a>
+                                </div>
                             <div>
                                 @if ($item->productCatalogues)
                                     <div>
@@ -50,9 +57,28 @@
                                         </span>
                                     </div>
                                 @endif
-
+                                <div class="mt-1">
+                                    <span class="text-success fw-bold">{{ number_format($item->price, 0, ',', '.') }} VNĐ</span>
+                                    @if($item->del > 0)
+                                        <span class="text-danger text-decoration-line-through ms-2">{{ number_format($item->del, 0, ',', '.') }} VNĐ</span>
+                                    @endif
+                                </div>
+                                @if($item->brands)
+                                    <div class="mt-1">
+                                        <small class="text-muted">Thương hiệu: <strong>{{ $item->brands->name }}</strong></small>
+                                    </div>
+                                @endif
+                                <div class="mt-1">
+                                    <small class="text-muted">Tạo: {{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : 'N/A' }}</small>
+                                </div>
                             </div>
                         </div>
+                    </td>
+                    <td class="text-center fw-600">
+                        <span class="badge bg-{{ $item->instock > 0 ? 'success' : 'danger' }}-subtle text-{{ $item->instock > 0 ? 'success' : 'danger' }}">
+                            {{ $item->instock ?? 0 }}
+                        </span>
+                    </td>
                     <td class="order text-center fw-600">{{ $item->sku }}</td>
                     <td class="status text-center">
                         {!! $badge !!}

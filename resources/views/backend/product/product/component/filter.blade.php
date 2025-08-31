@@ -1,8 +1,15 @@
 <div class="col">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <button class="btn btn-soft-danger hidden-visibility" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="ri-delete-bin-2-line fz-14"></i>
-        </button>
+        <div class="d-flex align-items-center">
+            <button class="btn btn-soft-danger hidden-visibility me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="ri-delete-bin-2-line fz-14"></i>
+            </button>
+            <div class="d-flex align-items-center me-3">
+                <span class="badge bg-primary me-2">Tổng: {{ $products->total() }}</span>
+                <span class="badge bg-success me-2">Hiển thị: {{ $products->where('publish', 1)->count() }}</span>
+                <span class="badge bg-warning me-2">Hết hàng: {{ $products->where('instock', 0)->count() }}</span>
+            </div>
+        </div>
         <div class="col-sm-auto">
             <div>
                 <a href="{{ route('product.create') }}" class="btn btn-success add-btn"><i

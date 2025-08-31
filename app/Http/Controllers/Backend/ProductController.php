@@ -62,13 +62,20 @@ class ProductController extends Controller
     }
     public function store(StoreProductRequest $request)
     {
-        // gọi tới service với phương thức create 
-        $result = $this->productService->create($request);
-        if ($result) {
-            flash()->success('Thêm mới thành công');
-            return redirect()->route('product.index');
-        } else {
-            flash()->error('Thất bại. Đã có lỗi xảy ra vui lòng thử lại!');
+        try {
+            // gọi tới service với phương thức create
+            $result = $this->productService->create($request);
+            if ($result) {
+                flash()->success('Thêm mới thành công');
+                return redirect()->route('product.index');
+            } else {
+                flash()->error('Thất bại. Đã có lỗi xảy ra vui lòng thử lại!');
+                return redirect()->back()->withInput();
+            }
+        } catch (\Exception $e) {
+            \Log::error('Lỗi thêm sản phẩm: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            flash()->error('Lỗi: ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
     }
@@ -92,12 +99,17 @@ class ProductController extends Controller
     }
     public function edit($slug, UpdateProductRequest $request)
     {
-        $result = $this->productService->update($slug, $request);
-        if ($result) {
-            flash()->success('cập nhật thành công');
-            return redirect()->route('product.index');
-        } else {
-            flash()->error('Thất bại. Đã có lỗi xảy ra vui lòng thử lại!');
+        try {
+            $result = $this->productService->update($slug, $request);
+            if ($result) {
+                flash()->success('Cập nhật thành công');
+                return redirect()->route('product.index');
+            } else {
+                flash()->error('Thất bại. Đã có lỗi xảy ra vui lòng thử lại!');
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            flash()->error('Lỗi: ' . $e->getMessage());
             return redirect()->back();
         }
     }
@@ -116,13 +128,17 @@ class ProductController extends Controller
             flash()->warning('Sản phẩm chưa được xóa!');
             return redirect()->route('product.index');
         } else {
-
-            $result = $this->productService->destroy($id);
-            if ($result) {
-                flash()->success('Sản phẩm đã được xóa thành công!');
-                return redirect()->route('product.index');
-            } else {
-                flash()->error('Có lỗi khi xóa, vui lòng thử lại!');
+            try {
+                $result = $this->productService->destroy($id);
+                if ($result) {
+                    flash()->success('Sản phẩm đã được xóa thành công!');
+                    return redirect()->route('product.index');
+                } else {
+                    flash()->error('Có lỗi khi xóa, vui lòng thử lại!');
+                    return redirect()->back();
+                }
+            } catch (\Exception $e) {
+                flash()->error('Lỗi: ' . $e->getMessage());
                 return redirect()->back();
             }
         }
@@ -130,19 +146,27 @@ class ProductController extends Controller
 
     public function destroyMultiple(Request $request)
     {
-        // Lấy giá trị từ input ẩn đã truyền mảng ID
-        $listId = $request->input('array_id');
+        try {
+            // Lấy giá trị từ input ẩn đã truyền mảng ID
+            $listId = $request->input('array_id');
 
-        // Kiểm tra nếu có ID, và tách chuỗi thành mảng
-        if ($listId) {
-            $arrayId = explode(',', $listId);
-            dd($arrayId);
-            $this->productService->destroyBulk($arrayId);
-            flash()->success('Xóa thành công các bản ghi.');
-        } else {
-            flash()->warning('Không có bản ghi nào được chọn để xóa.');
+            // Kiểm tra nếu có ID, và tách chuỗi thành mảng
+            if ($listId) {
+                $arrayId = explode(',', $listId);
+                $result = $this->productService->destroyBulk($arrayId);
+                if ($result) {
+                    flash()->success('Xóa thành công các bản ghi.');
+                } else {
+                    flash()->error('Có lỗi khi xóa, vui lòng thử lại!');
+                }
+            } else {
+                flash()->warning('Không có bản ghi nào được chọn để xóa.');
+            }
+
+            return redirect()->route('product.index');
+        } catch (\Exception $e) {
+            flash()->error('Lỗi: ' . $e->getMessage());
+            return redirect()->back();
         }
-
-        return redirect()->route('product.index');
     }
 }

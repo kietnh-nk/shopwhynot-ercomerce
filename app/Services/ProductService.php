@@ -53,10 +53,10 @@ class ProductService implements ProductServiceInterface
             'keyword' => addslashes($request->input('keyword')),
             'publish' => $request->input('publish') !== null ? $request->integer('publish') : null,
             'where' => [
-                ['brand_id', '=',  $request->integer('brand_id')]
+                ['brand_id', '=', $request->integer('brand_id')]
             ]
         ];
-        $relation = ['productCatalogues'];
+        $relation = ['productCatalogues', 'brands'];
         $perPage = $request->integer('perpage') ?: 10;
         $products = $this->productRepository->pagination(
             $this->paginateSelect(),
@@ -76,7 +76,7 @@ class ProductService implements ProductServiceInterface
         try {
             // Validate dữ liệu trước khi tạo
             $this->validateProductData($request);
-            
+
             $product = $this->createProduct($request);
 
             // Trường hợp không có phiên bản
@@ -120,8 +120,8 @@ class ProductService implements ProductServiceInterface
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            \Log::error('Lỗi cập nhật sản phẩm: ' . $e->getMessage());
+            throw new \Exception('Có lỗi xảy ra khi cập nhật sản phẩm: ' . $e->getMessage());
         }
     }
     public function destroy($id = 0)
@@ -134,8 +134,8 @@ class ProductService implements ProductServiceInterface
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            \Log::error('Lỗi xóa sản phẩm: ' . $e->getMessage());
+            throw new \Exception('Có lỗi xảy ra khi xóa sản phẩm: ' . $e->getMessage());
         }
     }
     public function destroyBulk($arrayId = [])
@@ -157,8 +157,8 @@ class ProductService implements ProductServiceInterface
                 foreach ($arrayId as $id) {
                     $product = $this->productRepository->findById($id);
 
-                    // Kiểm tra nếu có liên kết trong bảng `Products`
-                    if ($product->products()->exists()) {
+                    // Kiểm tra nếu có liên kết trong bảng order_details hoặc wishlists
+                    if ($product->orderDetails()->exists() || $product->wishlists()->exists()) {
                         // Thêm vào danh sách bản ghi không thỏa mãn điều kiện xóa
                         $arrayIdNotSatisfied[] = $id;
                     } else {
@@ -180,8 +180,8 @@ class ProductService implements ProductServiceInterface
             return true;
         } catch (\Exception $e) {
             DB::rollBack();
-            echo $e->getMessage();
-            return false;
+            \Log::error('Lỗi xóa bulk sản phẩm: ' . $e->getMessage());
+            throw new \Exception('Có lỗi xảy ra khi xóa sản phẩm: ' . $e->getMessage());
         }
     }
 
@@ -189,7 +189,7 @@ class ProductService implements ProductServiceInterface
     {
         $payload = $request->only($this->payload());
         $payload['del'] = (isset($payload['del'])) ? $payload['del'] : '0';
-        $payload['slug'] = Str::slug($payload['slug'], '-').'-'.rand(10000, 99999);
+        $payload['slug'] = Str::slug($payload['slug'], '-') . '-' . rand(10000, 99999);
         $payload['attributeCatalogue'] = $this->formatJson($request, 'attributeCatalogue');
         $payload['attribute'] = $request->input('attribute');
         $payload['variant'] = $this->formatJson($request, 'variant');
@@ -199,7 +199,7 @@ class ProductService implements ProductServiceInterface
     }
     private function createVariant($product, $request)
     {
-        $payload = $request->only(['name', 'variant', 'productVariant', 'attribute']); // các input hidden của variant và productVariant 
+        $payload = $request->only(['name', 'variant', 'productVariant', 'attribute']); // các input hidden của variant và productVariant
         // dd($payload);
         $variant = $this->createVariantArray($payload);
         if (empty($variant)) {
@@ -207,7 +207,7 @@ class ProductService implements ProductServiceInterface
         }
         // sử dụng phương thức createmany()
         $variants = $product->productVariant()->createMany($variant);
-        // lấy danh sách id của variants -> trc khi commit lần đầu empty bảng product_variant để inert đúng 
+        // lấy danh sách id của variants -> trc khi commit lần đầu empty bảng product_variant để inert đúng
         $variantId = $variants->pluck('id');
         // dd($variantId);
         $attributeCombines = $this->comebineAttribute(array_values($payload['attribute']));
@@ -228,11 +228,12 @@ class ProductService implements ProductServiceInterface
 
     private function comebineAttribute($attributes = [], $index = 0)
     {
-        // đk dừng đệ quy 
-        if ($index === count($attributes)) return [[]];
-        // đệ quy 
+        // đk dừng đệ quy
+        if ($index === count($attributes))
+            return [[]];
+        // đệ quy
         $subComebines = $this->comebineAttribute($attributes, $index + 1);
-        $combines  = [];
+        $combines = [];
         foreach ($attributes[$index] as $key => $val) {
             foreach ($subComebines as $keySub => $valSub) {
                 $combines[] = array_merge([$val], $valSub);
@@ -314,7 +315,7 @@ class ProductService implements ProductServiceInterface
         // lấy ra mảng id và merge lại vs nhau
         $attributeId = array_merge(...$product->attribute);
         $attrs = $this->attributeRepository->findAttributeByIdArray($attributeId);
-        // merge lại thành từng khối 
+        // merge lại thành từng khối
         if (!is_null($attributeCatalogues)) {
             foreach ($attributeCatalogues as $key => $val) {
                 $tempAttributes = [];
@@ -357,20 +358,20 @@ class ProductService implements ProductServiceInterface
                 if (count($codes) === 2) {
                     list($colorId, $sizeId) = $codes;
 
-                    if (!in_array((int)$colorId, $result['color'])) {
-                        $result['color'][] = (int)$colorId;
+                    if (!in_array((int) $colorId, $result['color'])) {
+                        $result['color'][] = (int) $colorId;
                     }
-                    if (!in_array((int)$sizeId, $result['size'])) {
-                        $result['size'][] = (int)$sizeId;
+                    if (!in_array((int) $sizeId, $result['size'])) {
+                        $result['size'][] = (int) $sizeId;
                     }
                 } elseif (count($codes) === 1) {
                     list($colorId) = $codes;
 
                     $arrayColorId = $this->isColor();
 
-                    if (in_array((int)$colorId, $arrayColorId)) {
-                        if (!in_array((int)$colorId, $result['color'])) {
-                            $result['color'][] = (int)$colorId;
+                    if (in_array((int) $colorId, $arrayColorId)) {
+                        if (!in_array((int) $colorId, $result['color'])) {
+                            $result['color'][] = (int) $colorId;
                         }
                     } else {
                         // if (!in_array((int)$sizeId, $result['size'])) {
@@ -395,11 +396,12 @@ class ProductService implements ProductServiceInterface
         return $arrayColorId;
     }
     // dashboard
-    public function productSaler(){
+    public function productSaler()
+    {
         $condition = [
             'where' => [
-                ['publish', '=',  1],
-                ['sold_count', '>=',  5]
+                ['publish', '=', 1],
+                ['sold_count', '>=', 5]
             ]
         ];
         $relation = ['productVariant', 'productVariant.attributes'];
@@ -414,10 +416,11 @@ class ProductService implements ProductServiceInterface
 
         return $products;
     }
-    public function productNews(){
+    public function productNews()
+    {
         $condition = [
             'where' => [
-                ['publish', '=',  1],
+                ['publish', '=', 1],
             ]
         ];
         $relation = ['productVariant', 'productVariant.attributes'];
@@ -432,12 +435,13 @@ class ProductService implements ProductServiceInterface
 
         return $products;
     }
-    public function productSales(){
+    public function productSales()
+    {
         $products = $this->productRepository->getLimitOrder(
             ['productVariant', 'productVariant.attributes'],
             [
-                ['publish', '=',  1],
-                ['del', '>',  0],
+                ['publish', '=', 1],
+                ['del', '>', 0],
             ],
             [
                 ['del', 'asc']
@@ -447,12 +451,13 @@ class ProductService implements ProductServiceInterface
 
         return $products;
     }
-    public function productSupperSales(){
+    public function productSupperSales()
+    {
         $products = $this->productRepository->getLimitOrder(
             ['productVariant', 'productVariant.attributes'],
             [
-                ['publish', '=',  1],
-                ['del', '>',  0],
+                ['publish', '=', 1],
+                ['del', '>', 0],
             ],
             [
                 ['del', 'desc']
@@ -501,6 +506,7 @@ class ProductService implements ProductServiceInterface
             'del',
             'sold_count',
             'sku',
+            'instock',
             'attributeCatalogue', // json
             'attribute', // json
             'variant',  // json
@@ -545,6 +551,11 @@ class ProductService implements ProductServiceInterface
             }
         }
 
+        // Kiểm tra giá sản phẩm
+        if ($request->price && (!is_numeric($request->price) || $request->price < 0)) {
+            throw new \Exception('Giá sản phẩm phải là số và lớn hơn hoặc bằng 0');
+        }
+
         // Validate variant data nếu có
         if (isset($request->variant['sku']) && count($request->variant['sku']) > 0) {
             $this->validateVariantData($request);
@@ -561,7 +572,7 @@ class ProductService implements ProductServiceInterface
         $variantQuantities = $request->variant['quantity'] ?? [];
 
         // Kiểm tra SKU variant trùng lặp
-        $duplicateSkus = array_filter(array_count_values($variantSkus), function($count) {
+        $duplicateSkus = array_filter(array_count_values($variantSkus), function ($count) {
             return $count > 1;
         });
 
@@ -582,7 +593,7 @@ class ProductService implements ProductServiceInterface
             }
 
             if (isset($variantPrices[$key]) && (!is_numeric($variantPrices[$key]) || $variantPrices[$key] < 0)) {
-                throw new \Exception('Giá variant phải là số và lớn hơn 0');
+                throw new \Exception('Giá variant phải là số và lớn hơn hoặc bằng 0');
             }
 
             if (isset($variantQuantities[$key]) && (!is_numeric($variantQuantities[$key]) || $variantQuantities[$key] < 0)) {
