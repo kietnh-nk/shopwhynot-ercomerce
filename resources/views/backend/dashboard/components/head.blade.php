@@ -31,8 +31,6 @@
 <link href="/libaries/templates/bee-cloudy-admin/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
 {{-- daterangpicker  --}}
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-{{-- price input css --}}
-<link href="/libaries/css/price-input.css" rel="stylesheet" type="text/css" />
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.5.12/vue.cjs.js"
