@@ -120,7 +120,11 @@ class OrderController extends FontendController
             return redirect()->back();
         } else {
             $this->orderService->updateQuantitySoldProduct($order);
-            $this->orderService->sendMail($order);
+            
+            if(env('SEND_MAIL_ORDER') == true)  {
+                $this->orderService->sendMail($order);
+            }
+           
             // xóa cart sao khi thanh toán hành tất 
             $this->cartService->destroyCartItem($request);
             //update số lượng và đã bán

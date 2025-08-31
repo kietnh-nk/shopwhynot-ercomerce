@@ -47,12 +47,12 @@ class Product extends Model
     {
         return $this->belongsToMany(ProductCatalogue::class, 'product_catalogue_product', 'product_id', 'product_catalogue_id');
     }
-    // khai báo quán hệ vs bảng brand (n)
+    // khia báo quán hệ vs bảng brand (n)
     public function brands(): BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
-    //khai báo quan hệ với bảng product variant (1pro - nhiều phiên bản)
+    //khia báo quan hệ với bảng product variant (1pro - nhiều phiên bản)
     public function productVariant(): HasMany
     {
         return $this->hasMany(ProductVariant::class, 'product_id', 'id');

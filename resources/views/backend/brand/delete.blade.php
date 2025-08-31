@@ -8,7 +8,7 @@
                         <h4 class="mb-sm-0">Xóa dữ liệu</h4>
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="{{ route('brand.index') }}">Danh sách</a>
+                                <li class="breadcrumb-item"><a href="{{ route('attribute.catalogue.index') }}">Danh sách</a>
                                 </li>
                                 <li class="breadcrumb-item active">Xóa dữ liệu</li>
                             </ol>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="col-lg-7">
-                    <form action="{{ route('brand.destroy', $brand->id) }}" method="POST">
+                    <form action="{{ route('brand.destroy', ['id' => $brand->id]) }}" method="POST" >
                         @csrf
                         @method('DELETE')
                         <div class="row">
@@ -52,8 +52,7 @@
                                 <div class="card" style="height: 125px">
                                     <div class="card-body">
                                         <div class="mb-3">
-                                            <label class="form-label" style="padding-bottom: 2px">Nhóm thương
-                                                hiệu:</label>
+                                            <label class="form-label" style="padding-bottom: 2px">Nhóm thuộc tính:</label>
                                             <input type="text" class="form-control" name="name" id=""
                                                 value="{{ $brand->name }}" readonly>
                                             @if ($errors->has('name'))
@@ -63,10 +62,8 @@
                                     </div>
                                 </div>
                                 <div class="text-end mb-3">
-                                    <button type="submit" name="submit" value="cancel"
-                                        class="btn btn-outline-primary w-sm">Hủy</button>
-                                    <button type="submit" name="submit" value="confirm"
-                                        class="btn btn-success w-sm">Xác nhận</button>
+                                    <button type="submit" name="submit" value="cancel" class="btn btn-outline-primary w-sm">Hủy</button>
+                                    <button type="submit" name="submit" value="confirm" class="btn btn-success w-sm">Xác nhận</button>
                                 </div>
                             </div>
                         </div>

@@ -57,7 +57,7 @@ Giới thiệu
                         </div>
                         <div class="col-12 col-lg-6 col-md-6">
                             <p class="text-start">
-                                <strong>TẠI SAO BẠN NÊN CHỌN BEE Cloudy?</strong>
+                                <strong>TẠI SAO BẠN NÊN CHỌN WHY NOT FASHION?</strong>
                                 <br>
                                 <br>
                                 - <strong>Chất lượng hàng đầu:</strong> Chúng tôi hiểu rằng chất lượng sản phẩm là
