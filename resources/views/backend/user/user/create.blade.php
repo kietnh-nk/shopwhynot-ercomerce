@@ -230,9 +230,10 @@
                                     <label for="choices-publish-status-input " class="form-label">Trạng thái</label>
                                     <select class="form-select select2" name="publish">
                                         <option value="">[Chọn trạng thái]</option>
-                                        <option value="1" {{ old('publish', request('publish')) == '1' ? 'selected' : '' }}>Hiển thị</option>
-                                        <option value="0" {{ old('publish', request('publish')) == '0' ? 'selected' : '' }}>Ẩn</option>
+                                        <option value="1" {{ old('publish', $user->publish ?? '') == '1' ? 'selected' : '' }}>Hiển thị</option>
+                                        <option value="0" {{ old('publish', $user->publish ?? '') == '0' ? 'selected' : '' }}>Ẩn</option>
                                     </select>
+
                                 </div>
                             </div>
                         </div>

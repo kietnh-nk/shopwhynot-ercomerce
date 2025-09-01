@@ -34,20 +34,23 @@ class UserController extends Controller
         $this->userCatalogueService = $userCatalogueService;
         $this->userCatalogueRepository = $userCatalogueRepository;
     }
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $users = $this->userService->paginate($request);
         $userCatalogue = $this->userCatalogueService->userCatalogueAll();
         $template = 'backend.user.user.index';
         return view('backend.dashboard.layout', compact('template', 'users', 'userCatalogue'));
     }
 
-    public function create(){
+    public function create()
+    {
         $userCatalogue = $this->userCatalogueService->userCatalogueAll();
         $template = 'backend.user.user.create';
         return view('backend.dashboard.layout', compact('template', 'userCatalogue'));
     }
 
-    public function store(StoreUserRequest $request){
+    public function store(StoreUserRequest $request)
+    {
         $result = $this->userService->create($request);
         if ($result) {
             flash()->success('Thêm mới thành công');
@@ -58,7 +61,8 @@ class UserController extends Controller
         }
     }
 
-    public function update($id = 0){
+    public function update($id = 0)
+    {
         $user = $this->userRepository->findById($id);
         // định dạng lại ngày tháng năm thành YYYY-MM-DD để đổ ra input type = date
         if (!empty($user->birthday)) {
@@ -69,54 +73,61 @@ class UserController extends Controller
         return view('backend.dashboard.layout', compact('template', 'user', 'userCatalogue'));
     }
 
-    public function edit($id, UpdateUserRequest $request){
+    public function edit(UpdateUserRequest $request, $id)
+    {
         $result = $this->userService->update($id, $request);
+
         if ($result) {
             flash()->success('Cập nhật thành công');
             return redirect()->route('user.index');
         } else {
-            flash()->error('Cập nhật không thành công!. Hãy thao tác lại.');
-            return back();
+            // Trả về form với dữ liệu cũ
+            return redirect()->back()->withInput();
+            // ✅ Không cần withErrors, vì nếu FormRequest fail, Laravel đã tự đẩy $errors
         }
     }
 
-    public function detail($id = 0){
+
+    public function detail($id = 0)
+    {
         $user = $this->userRepository->findById($id);
         //--//
         $orderUserTodays = Order::where('customer_id', $id)
-        ->whereDate('created_at', '=', \Carbon\Carbon::now()->toDateString())
-        ->get();
+            ->whereDate('created_at', '=', \Carbon\Carbon::now()->toDateString())
+            ->get();
         $orderUserAllTimes = Order::where('customer_id', $id)
-        ->paginate(10);
+            ->paginate(10);
 
         $template = 'backend.user.user.detail';
         return view('backend.dashboard.layout', compact(
-            'template', 
+            'template',
             'user',
             'orderUserTodays',
             'orderUserAllTimes',
         ));
     }
 
-    // public function delete($id = 0){
-    //     $user = $this->userRepository->findById($id);
-    //     $template = 'backend.user.user.delete';
-    //     return view('backend.dashboard.layout', compact('template', 'user'));
-    // }
+    public function delete($id = 0)
+    {
+        $user = $this->userRepository->findById($id);
+        $template = 'backend.user.user.delete';
+        return view('backend.dashboard.layout', compact('template', 'user'));
+    }
 
-    // public function destroy($id = 0){
-    //     if ($_POST['submit'] == 'cancel') {
-    //         flash()->warning('Thành viên chưa được xóa!');
-    //         return redirect()->route('user.index');
-    //     } else {
-    //         $result = $this->userService->destroy($id);
-    //         if ($result) {
-    //             flash()->success('Thành viên đã được xóa thành công!');
-    //             return redirect()->route('user.index');
-    //         } else {
-    //             flash()->error('Có lỗi khi xóa vui lòng thử lại!');
-    //             return back();
-    //         }
-    //     }
-    // }
+    public function destroy($id = 0)
+    {
+        if ($_POST['submit'] == 'cancel') {
+            flash()->warning('Thành viên chưa được xóa!');
+            return redirect()->route('user.index');
+        } else {
+            $result = $this->userService->destroy($id);
+            if ($result) {
+                flash()->success('Thành viên đã được xóa thành công!');
+                return redirect()->route('user.index');
+            } else {
+                flash()->error('Có lỗi khi xóa vui lòng thử lại!');
+                return back();
+            }
+        }
+    }
 }

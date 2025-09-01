@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\CheckUserCatalogue::class,
+            'checkUserPublish' => \App\Http\Middleware\CheckUserPublish::class,
         ]);
 
         // $middleware->append([

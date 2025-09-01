@@ -48,18 +48,17 @@
                                 <a href="{{ route('product.catalogue.index') }}" class="nav-link">Nhóm sản phẩm</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#sidebarProduct" class="nav-link" data-bs-toggle="collapse"
-                                    role="button" aria-controls="sidebarProduct"> Sản phẩm
+                                 <a href="{{ route('product.index') }}" class="nav-link">
+                                                Sản phẩm</a>
                                 </a>
                                 <div class="collapse menu-dropdown" id="sidebarProduct">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="{{ route('product.index') }}" class="nav-link">
-                                                Danh sách</a>
+                                           
                                         </li>
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a href="{{ route('product.create') }}" class="nav-link">Thêm mới </a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
                             </li>

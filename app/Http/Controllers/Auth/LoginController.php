@@ -17,23 +17,40 @@ class LoginController extends Controller
     }
 
     public function login(LoginRequest $request)
-    {
-        $credentials = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
+{
+    // Tìm user theo email
+    $user = \App\Models\User::where('email', $request->input('email'))->first();
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            flash()->success('Đăng nhập thành công!');
-            return $user->user_catalogue_id >= 2
-                ? redirect()->route('dashboard.index')
-                : redirect()->route('home.index');
-        } else {
-            flash()->error('Thất bại. Email hoặc mật khẩu không đúng!');
-            return redirect()->back()->withInput($request->except('password'));
-        }
+    if (!$user) {
+        // Email không tồn tại
+        return redirect()->back()
+            ->withErrors(['email' => 'Email không tồn tại trong hệ thống!'])
+            ->withInput($request->except('password'));
     }
+
+    // Kiểm tra trạng thái publish
+    if ($user->publish == 0) {
+        return redirect()->back()
+            ->withErrors(['email' => 'Tài khoản của bạn đã bị khóa hoặc đang bị ẩn!'])
+            ->withInput($request->except('password'));
+    }
+
+    // Kiểm tra mật khẩu
+    if (\Illuminate\Support\Facades\Hash::check($request->input('password'), $user->password)) {
+        \Illuminate\Support\Facades\Auth::login($user);
+        flash()->success('Đăng nhập thành công!');
+
+        return $user->user_catalogue_id >= 2
+            ? redirect()->route('dashboard.index')
+            : redirect()->route('home.index');
+    } else {
+        return redirect()->back()
+            ->withErrors(['password' => 'Mật khẩu không đúng!'])
+            ->withInput($request->except('password'));
+    }
+}
+
+
 
     // Chuyển hướng đến Google
     public function redirectToGoogle()

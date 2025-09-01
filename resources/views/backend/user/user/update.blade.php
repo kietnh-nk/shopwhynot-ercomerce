@@ -77,8 +77,10 @@
                                                     <label class="form-label">Ngày sinh:<span class="text-danger fz-18"
                                                             style="visibility: hidden">*</span></label>
                                                     <input type="date" name="birthday" class="form-control"
-                                                        value="{{ old('birthday', $user->birthday) }}"
-                                                        placeholder="Nhập tên gợi nhớ của nhóm">
+                                                        value="{{ old('birthday', $user->birthday) }}">
+                                                        @if ($errors->has('birthday'))
+                                                            <span class="text-danger">{{ $errors->first('birthday') }}</span>
+                                                        @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -235,8 +237,9 @@
                                 <div class="mb-3">
                                     <label for="choices-publish-status-input " class="form-label">Trạng thái</label>
                                     <select class="form-select select2" name="publish">
-                                        <option value="1" {{ ($user->publish == 1) ? 'selected' : '' }}>Hiển thị</option>
-                                        <option value="0" {{ ($user->publish == 0) ? 'selected' : '' }}>Ẩn</option>
+                                        <option value="">[Chọn trạng thái]</option>
+                                        <option value="1" {{ old('publish', $user->publish ?? '') == '1' ? 'selected' : '' }}>Hiển thị</option>
+                                        <option value="0" {{ old('publish', $user->publish ?? '') == '0' ? 'selected' : '' }}>Ẩn</option>
                                     </select>
                                 </div>
                             </div>

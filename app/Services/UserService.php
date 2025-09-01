@@ -54,9 +54,11 @@ class UserService implements UserServiceInterface
         DB::beginTransaction();
         try {
             $payload = $request->except(['_token', 'submit', 'password_confirmation']);
-            // hash password
-            // dd($payload);
             $payload['password'] = Hash::make($payload['password']);
+
+            // 👇 Bắt buộc set publish kể cả khi = 0
+            $payload['publish'] = $request->input('publish', 0);
+
             $user = $this->userRepository->create($payload);
             DB::commit();
             return true;
@@ -66,6 +68,7 @@ class UserService implements UserServiceInterface
             return false;
         }
     }
+
     public function update($id, $request)
     {
         DB::beginTransaction();
@@ -73,6 +76,10 @@ class UserService implements UserServiceInterface
             $user = $this->userRepository->findById($id);
             $payload = $request->except(['_token', 'submit', 'province_name', 'district_name', 'ward_name']);
             $payload['birthday'] = date('Y/m/d', strtotime($payload['birthday']));
+
+            // 👇 Thêm dòng này
+            $payload['publish'] = $request->input('publish', 0);
+
             $this->userRepository->updateById($user->id, $payload);
             DB::commit();
             return true;
@@ -86,7 +93,7 @@ class UserService implements UserServiceInterface
         DB::beginTransaction();
         try {
             $user = $this->userRepository->findById($id);
-            if($user->user_catalogue_id == 2){
+            if ($user->user_catalogue_id == 2) {
                 flash()->error('bạn không đủ quyền thực hiện chức năng.');
                 return redirect()->back();
             }
@@ -102,14 +109,16 @@ class UserService implements UserServiceInterface
     }
 
     // DASHBOARD
-    public function countUserNew(){
+    public function countUserNew()
+    {
         $count = $this->userRepository->allWhere([
             [DB::raw('YEAR(created_at)'), '=', Carbon::now()->year],
             ['publish', '1'],
         ])->count();
         return $count;
     }
-    public function countUserAll(){
+    public function countUserAll()
+    {
 
         $count = $this->userRepository->allWhere([
             [DB::raw('YEAR(created_at)'), '=', Carbon::now()->year],
@@ -117,7 +126,8 @@ class UserService implements UserServiceInterface
         ])->count();
         return $count;
     }
-    public function countUserNewMonth(){
+    public function countUserNewMonth()
+    {
         $count = $this->userRepository->allWhere([
             [DB::raw('MONTH(created_at)'), '=', Carbon::now()->month],
             ['publish', '1'],
