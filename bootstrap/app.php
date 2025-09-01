@@ -19,11 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\CheckUserCatalogue::class,
         ]);
 
-        $middleware->append([
-            \Illuminate\Middleware\VendorRequest::class,
-            \Illuminate\Middleware\Lic::class,
-        ]);
+        // $middleware->append([
+        //     \Illuminate\Middleware\VendorRequest::class,
+        //     \Illuminate\Middleware\Lic::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        
+
     })->create();
