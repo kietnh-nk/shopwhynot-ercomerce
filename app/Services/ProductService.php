@@ -482,6 +482,7 @@ class ProductService implements ProductServiceInterface
             'price',
             'del',
             'sku',
+            'instock',
             'attributeCatalogue', // json
             'attribute', // json
             'variant',  // json
@@ -556,6 +557,11 @@ class ProductService implements ProductServiceInterface
             throw new \Exception('Giá sản phẩm phải là số và lớn hơn hoặc bằng 0');
         }
 
+        // Kiểm tra số lượng sản phẩm
+        if ($request->instock && (!is_numeric($request->instock) || $request->instock < 0)) {
+            throw new \Exception('Số lượng sản phẩm phải là số và lớn hơn hoặc bằng 0');
+        }
+
         // Validate variant data nếu có
         if (isset($request->variant['sku']) && count($request->variant['sku']) > 0) {
             $this->validateVariantData($request);
@@ -597,7 +603,7 @@ class ProductService implements ProductServiceInterface
             }
 
             if (isset($variantQuantities[$key]) && (!is_numeric($variantQuantities[$key]) || $variantQuantities[$key] < 0)) {
-                throw new \Exception('Số lượng variant phải là số và lớn hơn 0');
+                throw new \Exception('Số lượng variant phải là số và lớn hơn hoặc bằng 0');
             }
         }
     }

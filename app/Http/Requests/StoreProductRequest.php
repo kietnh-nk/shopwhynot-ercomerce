@@ -31,6 +31,13 @@ class StoreProductRequest extends FormRequest
                 'del' => $this->convertFormattedPrice($this->input('del'))
             ]);
         }
+
+        // Ensure instock is numeric
+        if ($this->has('instock')) {
+            $this->merge([
+                'instock' => (int) $this->input('instock')
+            ]);
+        }
     }
 
     /**
